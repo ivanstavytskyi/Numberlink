@@ -6,7 +6,7 @@ Backend is Java 21 / Spring Boot 4 (session cookies, not JWT). Frontend is Vite 
 
 Guest play works out of the box. Saving scores, reviews, and the settings panel need an account.
 
-![Preview](./preview.gif)
+https://github.com/user-attachments/assets/90ab6edc-1acb-4e00-94d1-8c9646355570
 
 ## Run
 
