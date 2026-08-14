@@ -6,6 +6,8 @@ Backend is Java 21 / Spring Boot 4 (session cookies, not JWT). Frontend is Vite 
 
 Guest play works out of the box. Saving scores, reviews, and the settings panel need an account.
 
+![Preview](./preview.gif)
+
 ## Run
 
 Docker with Compose v2. Ports **7000**, **8000**, and **5432** should be free.
