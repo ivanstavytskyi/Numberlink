@@ -1,0 +1,79 @@
+services:
+    backend:
+        image: backend-image:latest
+        container_name: backend-spring-boot
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
+            SPRING_DATASOURCE_USERNAME: ${DB_USER}
+            SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+            GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+            GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+            GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+            GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+            SMTP_HOST: ${SMTP_HOST}
+            SMTP_PORT: ${SMTP_PORT:-587}
+            SMTP_USERNAME: ${SMTP_USERNAME}
+            SMTP_PASSWORD: ${SMTP_PASSWORD}
+            MAIL_FROM: ${MAIL_FROM:-}
+            SMTP_STARTTLS: ${SMTP_STARTTLS:-true}
+            SMTP_SSL: ${SMTP_SSL:-false}
+        build:
+            context: ./backend
+            dockerfile: ../docker/backend/Dockerfile
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./backend/uploads:/app/uploads
+        depends_on:
+            db:
+                condition: service_healthy
+        healthcheck:
+            test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/actuator/health"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+
+
+    frontend:
+        image: frontend-image:latest
+        container_name: frontend-vite
+        build:
+            context: ./frontend
+            dockerfile: ../docker/frontend/Dockerfile
+        ports:
+            - "7000:7000"
+        volumes:
+            - ./frontend/src:/app/src
+        depends_on:
+            backend:
+                    condition: service_healthy
+        healthcheck:
+            test: ["CMD", "wget", "--spider", "-q", "http://localhost:7000"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 15s
+
+    db:
+        image: postgres-image:latest
+        container_name: db-postgresql
+        build:
+            context: ./postgres
+            dockerfile: ../docker/postgres/Dockerfile
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        healthcheck:
+            test: ["CMD-SHELL", "PGPASSWORD=${DB_PASSWORD} psql -U ${DB_USER} -d ${DB_NAME} -h localhost -c 'SELECT 1' -tAq"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

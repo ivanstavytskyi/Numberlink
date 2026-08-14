@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NumberLink — Play</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+</head>
+
+<body>
+    <header>
+        <div class="header_container container-fluid d-flex flex-wrap justify-content-start align-items-center ">
+
+            <a href="/" class="text-decoration-none text-reset">
+                <nav class="nav-1 numberlink_nav " data-href="/">
+                    NumberLink
+                </nav>
+            </a>
+
+            <a href="/leaderboard/" class="text-decoration-none text-reset">
+                <nav class="dashboard_nav " data-href="/leaderboard/">
+                    Leaderboard
+                </nav>
+            </a>
+
+            <a href="/reviews/" class="text-decoration-none text-reset">
+                <nav class="reviews_nav " data-href="/reviews/">
+                    Reviews
+                </nav>
+            </a>
+
+            <a href="/faqs/" class="text-decoration-none text-reset">
+                <nav class="faqs_nav " data-href="/faqs/">
+                    FAQs
+                </nav>
+            </a>
+
+        </div>
+    </header>
+
+    <main>
+        <section id="main">
+            <div class="container-fluid">
+                <div class="row justify-content-center flex-wrap field-container">
+                    <div class="field_container col-12 col-sm-10 col-md-9 col-lg-8 col-xl-7">
+
+                        <div class="field_container__parent-block-1">
+                            <div class="field_container__block-1">
+                                <div class="field_container__properties_text">
+                                    Puzzle
+                                </div>
+                                <div class="field_container__conf_props">
+                                    Choose grid size
+                                </div>
+                            </div>
+
+                            <div class="buttons field_container__map-controls">
+                                <mwc-select outlined id="width" label="Width">
+                                    <mwc-list-item value="7">7</mwc-list-item>
+                                    <mwc-list-item value="8">8</mwc-list-item>
+                                    <mwc-list-item selected value="9">9</mwc-list-item>
+                                    <mwc-list-item value="10">10</mwc-list-item>
+                                    <mwc-list-item value="11">11</mwc-list-item>
+                                </mwc-select>
+                                <mwc-select outlined id="height" label="Height">
+                                    <mwc-list-item value="7">7</mwc-list-item>
+                                    <mwc-list-item value="8">8</mwc-list-item>
+                                    <mwc-list-item selected value="9">9</mwc-list-item>
+                                    <mwc-list-item value="10">10</mwc-list-item>
+                                    <mwc-list-item value="11">11</mwc-list-item>
+                                </mwc-select>
+                            </div>
+                        </div>
+                        <div class="field_container__divider container-fluid mb-2"></div>
+                        <!-- Field -->
+                        <div id="btn_container" class="container d-flex justify-content-center">
+
+                            <div class="btn mb-2 text-center d-flex justify-content-center align-items-center"
+                                id="play_button"
+                                role="button"
+                                tabindex="0"
+                                aria-label="Start game"><span class="play-icon" aria-hidden="true"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                                        class="bi bi-play-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393">
+                                        </path>
+                                    </svg>
+                                </span>PLAY</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    <script defer type="module" src="./main.js"></script>
+</body>
+
+</html>

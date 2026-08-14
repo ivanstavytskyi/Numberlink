@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>NumberLink — Leaderboard</title>
+
+    <style>body{opacity:0;transition:opacity .22s ease}</style>
+</head>
+
+<body>
+    <header>
+        <div class="header_container container-fluid d-flex flex-wrap justify-content-start align-items-center ">
+
+            <a href="/" class="text-decoration-none text-reset">
+                <nav class="numberlink_nav" data-href="/">
+                    NumberLink
+                </nav>
+            </a>
+
+            <a href="./" class="text-decoration-none text-reset">
+                <nav class="nav-1 dashboard_nav" data-href="./">
+                    Leaderboard
+                </nav>
+            </a>
+
+            <a href="../reviews/" class="text-decoration-none text-reset">
+                <nav class="reviews_nav" data-href="../reviews">
+                    Reviews
+                </nav>
+            </a>
+
+            <a href="../faqs/" class="text-decoration-none text-reset">
+                <nav class="faqs_nav" data-href="../faqs">
+                    FAQs
+                </nav>
+            </a>
+
+        </div>
+    </header>
+
+    <main>
+        <div class="mt-4 container-fluid">
+            <div class="row justify-content-center">
+                <div
+                    class="leaderboard_head_block col-11 col-sm-9 col-md-8 col-lg-7 col-xl-6 d-flex justify-content-between align-items-start p-4">
+                    <div class="leaderboard_heading_left_part d-flex flex-column">
+                        <div class="leaderboard_text text-light mb-1">
+                            Leaderboard<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-medal mr-2 h-4 w-4"
+                                aria-hidden="true" style="
+                                    margin-left: 12px;
+                                    margin-bottom: 5px;
+                                ">
+                                <path
+                                    d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15">
+                                </path>
+                                <path d="M11 12 5.12 2.2"></path>
+                                <path d="m13 12 5.88-9.8"></path>
+                                <path d="M8 7h8"></path>
+                                <circle cx="12" cy="17" r="5"></circle>
+                                <path d="M12 18v-2h-.5"></path>
+                            </svg>
+                        </div>
+                        <div class="leaderboard_head_description">
+                            See who's leading the pack in our global quiz rankings.
+                        </div>
+                    </div>
+                    <div class="leaderboard_modes d-flex gap-2">
+                        <div class="leaderboard_mode-1 week">Weekly</div>
+                        <div class="leaderboard_mode-1 month">Monthly</div>
+                        <div class="leaderboard_mode all-time">All Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section id="main">
+            <div class="mt-4 container-fluid">
+                <div class="row justify-content-center flex-wrap leaderboard">
+                    <div class="field_container col-12 col-sm-11 col-md-10 col-lg-9 col-xl-8 p-0 mb-5">
+
+                        <div class="leaderboard_panel">
+                            <div class="sort_panel d-flex justify-content-left flex-wrap gap-4">
+                                <div class="sort_label">Sort by:</div>
+
+                                <button class="sort_btn time">Time</button>
+
+                                <div class="dropdown sort_dropdown">
+                                    <button class="btn dropdown-toggle sort_btn" type="button" id="map-sort-button"
+                                        data-bs-toggle="dropdown">
+                                        Map Size
+                                    </button>
+                                    <ul class="dropdown-menu sort_menu">
+                                        <li><a class="dropdown-item" data-value="all">All Sizes</a></li>
+                                        <li><a class="dropdown-item" data-value="7" data-size="7x7">7×7</a></li>
+                                        <li><a class="dropdown-item" data-value="8" data-size="8x8">8×8</a></li>
+                                        <li><a class="dropdown-item" data-value="9" data-size="9x9">9×9</a></li>
+                                        <li><a class="dropdown-item" data-value="10" data-size="10x10">10×10</a></li>
+                                        <li><a class="dropdown-item" data-value="11" data-size="11x11">11×11</a></li>
+                                    </ul>
+
+                                </div>
+
+
+                                <button class="sort_btn avg_time">Average Time</button>
+                                <button class="sort_btn avg_score">Average Score</button>
+                            </div>
+
+
+                            <div
+                                class="leaderboard_records row d-flex flex-column justify-content-center align-items-center">
+
+
+                                <div class="leaderboard_item self">
+                                    <div class="lb_content">
+                                        <div class="lb_row">
+                                            <span class="lb_medal self_medal" id="self_rank">—</span>
+                                            <div class="lb_avatar" id="self_avatar"></div>
+                                            <div class="lb_who">
+                                                <div class="lb_name-1">You</div>
+                                                <div class="lb_points-1" id="self_points_line">No score yet</div>
+                                            </div>
+                                            <div class="lb_self_badge">Your stats</div>
+                                        </div>
+                                        <div class="lb_stats">
+                                            <div class="lb_stat_item-1">
+                                                <span class="lb_stat_label-1">Avg Time:</span>
+                                                <span class="lb_stat_value-1 time">—</span>
+                                            </div>
+                                            <div class="lb_stat_item-1">
+                                                <span class="lb_stat_label-1">Avg Score:</span>
+                                                <span class="lb_stat_value-1 score">—</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="pagination_info">
+                        <span class="pg_label">Showing</span>
+                        <span class="pg_range">0</span>
+                        <span class="pg_label">of</span>
+                        <span class="pg_total">0</span>
+                        <span class="pg_label">results</span>
+                    </div>
+
+
+
+                    <div class="pagination">
+                        <button class="page_btn">‹</button>
+                        <button class="page_btn active">1</button>
+                        <button class="page_btn">2</button>
+                        <button class="page_btn">3</button>
+                        <button class="page_btn">›</button>
+                    </div>
+
+                </div>
+            </div>
+
+            </div>
+        </section>
+    </main>
+    <script defer type="module" src="./main.js"></script>
+</body>
+
+</html>

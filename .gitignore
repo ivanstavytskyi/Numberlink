@@ -1,0 +1,33 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Build / deps
+node_modules/
+frontend/node_modules/
+backend/build/
+backend/.gradle/
+build/
+.gradle/
+dist/
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Docker / local data
+postgres/data/
+*.pid
+
+# Uploaded profile avatars
+backend/uploads/
+uploads/

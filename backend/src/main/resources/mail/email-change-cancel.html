@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your NumberLink email is being changed</title>
+  <style type="text/css">
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+    @media only screen and (max-width: 620px) {
+      .nl-cta { display: block !important; width: 100% !important; box-sizing: border-box !important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f5; font-family:Arial, Helvetica, sans-serif;">
+  <div style="display:none; max-height:0; overflow:hidden;">Someone requested changing your NumberLink email to {{newEmail}}.</div>
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f4f4f5;">
+    <tr>
+      <td align="center" style="padding:40px 16px 48px 16px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="520" style="width:520px; max-width:520px;">
+          <tr>
+            <td style="padding:0 4px 20px 4px;">
+              <span style="font-size:18px; font-weight:bold; letter-spacing:-0.02em; color:#0f766e;">NumberLink</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#ffffff; border:1px solid #e4e4e7; border-radius:8px; padding:36px 40px;">
+              <h1 style="margin:0 0 20px 0; font-size:22px; line-height:1.3; font-weight:bold; color:#18181b;">Email change requested</h1>
+              <p style="margin:0 0 16px 0; font-size:15px; line-height:1.6; color:#3f3f46;">Hi {{username}},</p>
+              <p style="margin:0 0 24px 0; font-size:15px; line-height:1.6; color:#3f3f46;">
+                Someone asked to change your NumberLink email to <strong>{{newEmail}}</strong>. If this was you, no action is needed. If it wasn&rsquo;t, cancel the change. This link expires in {{ttlMinutes}} minutes.
+              </p>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="border-radius:6px; background-color:#dc2626;">
+                    <a class="nl-cta" href="{{cancelUrl}}" target="_blank" rel="noopener noreferrer"
+                       style="display:inline-block; padding:12px 28px; font-size:15px; font-weight:bold; line-height:1.3; color:#ffffff; text-decoration:none; border-radius:6px;">
+                      Cancel email change
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:28px 0 0 0; font-size:13px; line-height:1.6; color:#71717a;">
+                If the button doesn&rsquo;t work, copy and paste this link into your browser:
+              </p>
+              <p style="margin:6px 0 0 0; font-size:13px; line-height:1.6; word-break:break-all;">
+                <a href="{{cancelUrl}}" style="color:#0f766e; text-decoration:underline;">{{cancelUrl}}</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
