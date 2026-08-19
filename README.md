@@ -4,7 +4,7 @@ Numberlink is a browser online game. Pick a grid (7×7 up to 11×11), connect eq
 
 Backend is Java 21 / Spring Boot 4. Frontend is Vite 8, vanilla JS, Bootstrap 5. Database is PostgreSQL 16. Schema changes go through Flyway (`ddl-auto=validate`). The three services run with Docker Compose.
 
-Guest play works out of the box. Saving scores, reviews, and the settings panel need an account (session cookie-based authentication).
+Guest play works out of the box. Saving scores, reviews, and the settings panel need an account (cookie-based session authentication).
 
 https://github.com/user-attachments/assets/eb28a252-7cb1-4d94-b170-7d5c871b127c
 
