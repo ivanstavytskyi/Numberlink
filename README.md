@@ -88,7 +88,3 @@ numberlink/
 Pages under `frontend/src/`: `index.html` (play), `leaderboard/`, `reviews/`, `faqs/`, `verify/`. Play / leaderboard / reviews / faqs each have their own `main.js` and `style.css` — same header and settings, copied.
 
 Java package is `numberlink`.
-
-## Status
-
-Early version, not the finished game. Solo play and accounts work; later versions will add more.
