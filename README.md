@@ -6,7 +6,7 @@ Backend is Java 21 / Spring Boot 4. Frontend is Vite 8, vanilla JS, Bootstrap 5.
 
 Guest play works out of the box. Saving scores, reviews, and the settings panel need an account (cookie-based session authentication).
 
-https://github.com/user-attachments/assets/eb28a252-7cb1-4d94-b170-7d5c871b127c
+https://github.com/user-attachments/assets/c14bded2-2635-45b7-b024-02de0fd23bd7
 
 ## Run
 
