@@ -1,4 +1,5 @@
 package numberlink.controller;
+import numberlink.game.core.CheckSolution;
 import numberlink.game.core.CreateMap;
 import numberlink.game.core.GameConstants;
 import numberlink.service.user.UsernameGenerator;
@@ -13,12 +14,12 @@ import java.util.Map;
 public class GameController {
 
     private final CreateMap createMap;
-    private final UsernameGenerator usernameGenerator;
+    private final CheckSolution checkSolution;
 
 
-    public GameController(CreateMap createMap, UsernameGenerator usernameGenerator) {
+    public GameController(CreateMap createMap, CheckSolution checkSolution) {
         this.createMap = createMap;
-        this.usernameGenerator = usernameGenerator;
+        this.checkSolution = checkSolution;
     }
 
     @GetMapping("/api/create-map")
@@ -39,12 +40,6 @@ public class GameController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Error generating map");
-        }
-
-        if (session.getAttribute("username") == null) {
-            String name = usernameGenerator.generate();
-            if (name == null) return ResponseEntity.badRequest().body("Error generating name");
-            session.setAttribute("username", name);
         }
 
         session.setAttribute("width", width);
@@ -74,32 +69,24 @@ public class GameController {
     }
 
     @PostMapping("/api/map-check")
-    public ResponseEntity<?> mapCheck(@RequestBody int[][] map,
+    public ResponseEntity<?> mapCheck(@RequestBody int[][] mapConnected,
                                       HttpSession session) {
         Object widthObj = session.getAttribute("width");
         Object heightObj = session.getAttribute("height");
-        Object mapSolvedObj = session.getAttribute("map_solved");
+        Object mapSolutionObj = session.getAttribute("map_solved");
 
-        if (widthObj == null || heightObj == null || mapSolvedObj == null) {
+        if (widthObj == null || heightObj == null || mapSolutionObj == null) {
             return ResponseEntity.ok(false);
         }
 
         int width = (int) widthObj;
         int height = (int) heightObj;
-        int[][] mapSolved = (int[][]) mapSolvedObj;
+        int[][] mapSolution = (int[][]) mapSolutionObj;
 
-        if (map == null || map.length != height || map[0].length != width) {
+        if (mapConnected == null || mapConnected.length != height || mapConnected[0].length != width) {
             return ResponseEntity.ok(false);
         }
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (map[i][j] != mapSolved[i][j]) {
-                    return ResponseEntity.ok(false);
-                }
-            }
-        }
-
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(checkSolution.check(mapConnected, mapSolution));
     }
 }
