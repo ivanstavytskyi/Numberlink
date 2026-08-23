@@ -58,7 +58,7 @@ public class RestExceptionHandler {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("code", "AVATAR_TOO_LARGE");
         body.put("message", "Avatar must be 1 MB or smaller");
-        body.put("status", HttpStatus.PAYLOAD_TOO_LARGE.value());
-        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(body);
+        body.put("status", HttpStatus.CONTENT_TOO_LARGE.value());
+        return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE).body(body);
     }
 }

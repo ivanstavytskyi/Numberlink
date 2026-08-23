@@ -9,6 +9,7 @@ import numberlink.repository.ScoreRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,7 +96,8 @@ public class ScoreServiceJPA implements ScoreService {
     @Override
     @Transactional(readOnly = true)
     public ScoreResponseSelfDto getTopScore(UUID userId, String username) {
-        List<Object[]> rows = entityManager.createNativeQuery("""
+        List<Object[]> rows = entityManager.unwrap(Session.class)
+                .createNativeQuery("""
                         SELECT
                             ROUND(AVG(s.elapsed_seconds)::numeric, 1) AS avg_duration,
                             ROUND(AVG(s.score_result)::numeric, 1) AS avg_points,
@@ -113,7 +115,7 @@ public class ScoreServiceJPA implements ScoreService {
                             ) AS position
                         FROM score s
                         WHERE s.user_id = :userId
-                        """)
+                        """, Object[].class)
                 .setParameter("userId", userId)
                 .getResultList();
 
