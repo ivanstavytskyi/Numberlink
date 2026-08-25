@@ -17,6 +17,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	mockitoAgent
 }
 
 repositories {
@@ -46,6 +47,9 @@ dependencies {
 	testImplementation 'com.h2database:h2:2.2.224'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	mockitoAgent('org.mockito:mockito-core') {
+		transitive = false
+	}
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -54,4 +58,5 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
 }
