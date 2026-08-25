@@ -76,7 +76,11 @@ public class SecurityConfig {
                                 "/login/**",
                                 "/oauth2/**",
                                 "/error",
-                                "/actuator/health"
+                                "/actuator/health",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**"
                         ).permitAll()
 
                         // Main game page APIs (guest OK)
