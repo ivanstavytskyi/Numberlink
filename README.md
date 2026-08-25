@@ -19,6 +19,7 @@ docker compose up -d --build
 
 - Game: http://localhost:7000
 - API: http://localhost:8000
+- Swagger UI: http://localhost:8000/swagger-ui.html
 - Health: http://localhost:8000/actuator/health
 
 `db` has to be healthy before the API starts. Flyway then applies `backend/src/main/resources/db/migration/` (currently V1–V10). The frontend container waits on `/actuator/health`, then serves Vite on 7000. The browser talks to the UI on 7000 and to the API on 8000.
