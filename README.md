@@ -1,6 +1,6 @@
 # NumberLink
 
-Numberlink is a browser-based online game. Pick a grid (7×7 up to 11×11), connect equal numbers with paths that fill the board, no crossings.
+A browser-based online puzzle game. Pick a grid (7×7 up to 11×11), connect equal numbers with paths that fill the board, no crossings.
 
 Backend is Java 21 / Spring Boot 4. Frontend is Vite 8, vanilla JS, Bootstrap 5. Database is PostgreSQL 16. Schema changes go through Flyway (`ddl-auto=validate`). The three services run with Docker Compose.
 
