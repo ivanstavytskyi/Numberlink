@@ -3512,9 +3512,7 @@ function initMobileNav() {
   btn.setAttribute('aria-expanded', 'false');
   btn.innerHTML = burgerIcon();
 
-  const auth = container.querySelector('.header_auth');
-  if (auth) auth.after(btn);
-  else container.appendChild(btn);
+  container.prepend(btn);
 
   btn.addEventListener('click', () => {
     const open = container.classList.toggle('menu-open');

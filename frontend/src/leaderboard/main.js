@@ -3446,11 +3446,16 @@ function setGateVisible(visible) {
   document.body.classList.toggle('guest-locked', visible);
 
   if (visible) {
-    // Focus the dialog shell (a11y), not Log in — avoids a "selected" focus ring on open
     requestAnimationFrame(() => {
       root.querySelector('.guest-gate__dialog')?.focus({ preventScroll: true });
     });
   }
+}
+
+function revealPage() {
+  if (document.body.dataset.pageRevealed === '1') return;
+  document.body.dataset.pageRevealed = '1';
+  document.body.style.opacity = '1';
 }
 
 function applyAuthState(user) {
@@ -3484,12 +3489,15 @@ function initGuestGate() {
 
   document.addEventListener('numberlink:auth', (event) => {
     applyAuthState(event.detail?.user ?? null);
+    revealPage();
   });
 
-  // Sync if auth-ui already finished (or wait for numberlink:auth)
   if (document.body.dataset.authReady === '1') {
     applyAuthState(isAuthenticated() ? { ok: true } : null);
+    revealPage();
   }
+
+  window.setTimeout(revealPage, 3000);
 }
 
 window.NumberLinkGuest = {
@@ -3529,10 +3537,7 @@ function initMobileNav() {
   btn.setAttribute('aria-expanded', 'false');
   btn.innerHTML = burgerIcon();
 
-  // Brand · Nav · Auth · Burger
-  const auth = container.querySelector('.header_auth');
-  if (auth) auth.after(btn);
-  else container.appendChild(btn);
+  container.prepend(btn);
 
   btn.addEventListener('click', () => {
     const open = container.classList.toggle('menu-open');
@@ -3546,8 +3551,6 @@ initMobileNav();
 
 /* ——— page ——— */
 
-
-requestAnimationFrame(() => { document.body.style.opacity = '1'; });
 
 function main() {
     leaderBoarTimelineButtons();
