@@ -1,14 +1,15 @@
 package numberlink.game.core;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import static numberlink.game.core.GameConstants.DX;
 import static numberlink.game.core.GameConstants.DY;
 
 @Service
+@RequiredArgsConstructor
 public class CheckFlowHead {
-    @Autowired
-    private CheckCellState checkCellState;
+    private final CheckCellState checkCellState;
 
     public boolean isFlowHead(int x, int y, int[][] table) {
         int w = table[0].length, h = table.length;

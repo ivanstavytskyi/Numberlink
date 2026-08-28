@@ -1,5 +1,6 @@
 package numberlink.game.core;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +10,9 @@ import java.util.List;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class ConvertToView {
-    @Autowired
-    private FillMap fillMap;
+    private final FillMap fillMap;
 
     public void flatten(int[][] table, Random rand) {
         int w = table[0].length, h = table.length;

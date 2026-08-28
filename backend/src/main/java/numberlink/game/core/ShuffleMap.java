@@ -6,7 +6,6 @@ import java.util.Random;
 
 @Service
 public class ShuffleMap {
-
     public void shuffle(int[][] table, Random rand) {
         int w = table[0].length, h = table.length;
         if (w <= 1 || h <= 1)
@@ -33,15 +32,5 @@ public class ShuffleMap {
             if (h > 2 && table[h - 3][w - 1] == table[h - 2][w - 1])
                 table[h - 1][w - 1] = table[h - 2][w - 1];
         }
-
-        // System.out.println("OddCorner: ");
-        // for (int i = 0; i < h; i++) {
-        // for (int j = 0; j < w; j++) {
-        // System.out.print(table[i][j] + " ");
-        // }
-        // System.out.println();
-        // }
-
-        // System.out.println();
     }
 }
