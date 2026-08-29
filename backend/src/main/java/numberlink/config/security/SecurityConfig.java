@@ -1,5 +1,6 @@
 package numberlink.config.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -21,23 +23,29 @@ public class SecurityConfig {
     private final OauthLoginFailureHandler oauthLoginFailureHandler;
     private final SessionEpochFilter sessionEpochFilter;
     private final UserSessionFilter userSessionFilter;
+    private final List<String> corsAllowedOriginPatterns;
 
     public SecurityConfig(
             OauthLoginSuccessHandler oauthLoginSuccessHandler,
             OauthLoginFailureHandler oauthLoginFailureHandler,
             SessionEpochFilter sessionEpochFilter,
-            UserSessionFilter userSessionFilter
+            UserSessionFilter userSessionFilter,
+            @Value("${app.cors.allowed-origin-patterns}") String corsAllowedOriginPatterns
     ) {
         this.oauthLoginSuccessHandler = oauthLoginSuccessHandler;
         this.oauthLoginFailureHandler = oauthLoginFailureHandler;
         this.sessionEpochFilter = sessionEpochFilter;
         this.userSessionFilter = userSessionFilter;
+        this.corsAllowedOriginPatterns = Arrays.stream(corsAllowedOriginPatterns.split(","))
+                .map(String::trim)
+                .filter(pattern -> !pattern.isEmpty())
+                .toList();
     }
 
     @Bean
     public CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:7000"));
+        configuration.setAllowedOriginPatterns(corsAllowedOriginPatterns);
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowCredentials(true);
