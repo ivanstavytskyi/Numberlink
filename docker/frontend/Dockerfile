@@ -8,4 +8,6 @@ RUN npm install
 
 COPY . .
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+EXPOSE 7000
+
+CMD ["sh", "-c", "npm run build && npm run preview -- --host 0.0.0.0 --port 7000"]
