@@ -9,7 +9,7 @@ import '@material/mwc-select';
 import '@material/mwc-list/mwc-list-item.js';
 
 function backendOrigin() {
-  return `${window.location.protocol}//${window.location.hostname}:8000`;
+  return '';
 }
 function backendApiUrl() {
   return `${backendOrigin()}/api`;
@@ -3923,7 +3923,19 @@ async function createFilledMap() {
     })();
 
     const table = document.querySelector('#table_container tbody');
-    const colors = ['#0d9488', '#22c55e', '#0284c7', '#F5A202', '#ef4444', '#ea580c', '#EC4899', '#84CC16', '#0F766E', '#64748B', '#0891b2'];
+    const colors = [
+      '#0d9488',
+      '#16a34a',
+      '#0284c7',
+      '#d97706',
+      '#dc2626',
+      '#ea580c',
+      '#db2777',
+      '#65a30d',
+      '#7c3aed',
+      '#64748b',
+      '#0891b2',
+    ];
 
     for (let i = 0; i < heightElement.value; i++) {
         const row = table.rows[i];

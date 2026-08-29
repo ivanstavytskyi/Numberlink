@@ -1,4 +1,28 @@
 services:
+    nginx:
+        image: nginx-image:latest
+        container_name: nginx-proxy
+        build:
+            context: ./docker/nginx
+            dockerfile: Dockerfile
+        ports:
+            - "8090:80"
+        volumes:
+            - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+            - ./docker/nginx/proxy_params:/etc/nginx/proxy_params:ro
+        depends_on:
+            frontend:
+                condition: service_healthy
+            backend:
+                condition: service_healthy
+        healthcheck:
+            test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 10s
+
     backend:
         image: backend-image:latest
         container_name: backend-spring-boot
@@ -28,16 +52,17 @@ services:
             db:
                 condition: service_healthy
         healthcheck:
-            test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/actuator/health"]
+            test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8000/actuator/health"]
             interval: 10s
             timeout: 5s
             retries: 5
             start_period: 30s
 
-
     frontend:
         image: frontend-image:latest
         container_name: frontend-vite
+        environment:
+            BACKEND_PROXY: http://backend:8000
         build:
             context: ./frontend
             dockerfile: ../docker/frontend/Dockerfile
@@ -47,13 +72,13 @@ services:
             - ./frontend/src:/app/src
         depends_on:
             backend:
-                    condition: service_healthy
+                condition: service_healthy
         healthcheck:
-            test: ["CMD", "wget", "--spider", "-q", "http://localhost:7000"]
+            test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:7000"]
             interval: 10s
             timeout: 5s
-            retries: 5
-            start_period: 15s
+            retries: 8
+            start_period: 60s
 
     db:
         image: postgres-image:latest

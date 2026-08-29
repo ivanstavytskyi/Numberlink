@@ -3,7 +3,7 @@ import './style.css';
 import * as bootstrap from 'bootstrap';
 
 function backendOrigin() {
-  return `${window.location.protocol}//${window.location.hostname}:8000`;
+  return '';
 }
 function backendApiUrl() {
   return `${backendOrigin()}/api`;

@@ -2,7 +2,7 @@ const CONFIRMED_FLAG = 'nl_email_just_confirmed';
 const CONFIRM_ERROR_FLAG = 'nl_email_confirm_error';
 
 function backendApiUrl() {
-  return `${window.location.protocol}//${window.location.hostname}:8000/api`;
+  return '/api';
 }
 
 async function verifyEmail(token) {
