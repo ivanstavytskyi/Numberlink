@@ -1,9 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import * as bootstrap from 'bootstrap';
-import cellClick from './sound/cell_click.mp3';
-import cellConnect from './sound/cell_connect.mp3';
-import cellDisconnect from './sound/cell_disconnect.mp3';
+
+const cellClick = '/assets/sounds/cell_click.mp3';
+const cellConnect = '/assets/sounds/cell_connect.mp3';
+const cellDisconnect = '/assets/sounds/cell_disconnect.mp3';
 
 import '@material/mwc-select';
 import '@material/mwc-list/mwc-list-item.js';
@@ -15,12 +16,8 @@ function backendApiUrl() {
   return `${backendOrigin()}/api`;
 }
 
-function draftStorageKey() {
-  return 'numberlink.settings.draft';
-}
-
 function closeIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
 }
 function gearIcon() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.115 2.693l.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.115l-.094.319c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.693-1.115z"/></svg>`;
@@ -85,9 +82,29 @@ function settingsSections() {
   return [
   { id: 'profile', label: 'Profile' },
   { id: 'preferences', label: 'Preferences' },
-  { id: 'notifications', label: 'Notifications' },
   { id: 'security', label: 'Security' },
 ];
+}
+
+function settingsNavIcon(id) {
+  const svg = (paths) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+  if (id === 'profile') {
+    return svg(
+      '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>'
+    );
+  }
+  if (id === 'preferences') {
+    return svg(
+      '<path d="M21 4h-7"/><path d="M10 4H3"/><path d="M21 12h-9"/><path d="M8 12H3"/><path d="M21 20h-5"/><path d="M12 20H3"/><path d="M14 2v4"/><path d="M8 10v4"/><path d="M16 18v4"/>'
+    );
+  }
+  if (id === 'security') {
+    return svg(
+      '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>'
+    );
+  }
+  return '';
 }
 
 /** Live sessions from GET /api/me/sessions. */
@@ -213,50 +230,26 @@ function userInitials(username = '') {
   return cleaned.slice(0, 2).toUpperCase();
 }
 
-function readDraft(userId) {
-  try {
-    const raw = localStorage.getItem(draftStorageKey());
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (parsed?.userId && userId && parsed.userId !== userId) return null;
-    return parsed;
-  } catch (_) {
-    return null;
-  }
-}
-
-function writeDraft(draft) {
-  try {
-    localStorage.setItem(draftStorageKey(), JSON.stringify(draft));
-  } catch (_) {
-    /* ignore quota */
-  }
-}
-
 function buildDraftFromUser(user) {
-  const saved = readDraft(user?.id);
   const sound = localStorage.getItem('sound');
   const widthRaw = Number(localStorage.getItem('field_width'));
   const heightRaw = Number(localStorage.getItem('field_height'));
   return {
     userId: user?.id || null,
-    username: saved?.username ?? user?.username ?? '',
+    username: user?.username ?? '',
     email: user?.email ?? '',
     hasPassword: Boolean(user?.hasPassword),
     emailManagedBy: user?.emailManagedBy || null,
     canEditEmail: user?.canEditEmail !== false && !user?.pendingEmail,
     pendingEmail: user?.pendingEmail || '',
     pendingExpiresAt: user?.pendingExpiresAt || null,
-    avatarUrl: user?.avatarUrl || saved?.avatarUrl || null,
+    avatarUrl: user?.avatarUrl || null,
     googleAccount: oauthAccountFromUser(user, 'GOOGLE'),
     githubAccount: oauthAccountFromUser(user, 'GITHUB'),
     twoFactorEnabled: Boolean(user?.twoFactorEnabled),
     soundOn: sound !== 'muted',
-    defaultWidth: widthRaw >= 7 && widthRaw <= 11 ? widthRaw : 7,
-    defaultHeight: heightRaw >= 7 && heightRaw <= 11 ? heightRaw : 7,
-    notifyProduct: saved?.notifyProduct ?? true,
-    notifyScores: saved?.notifyScores ?? true,
-    notifyReviews: saved?.notifyReviews ?? false,
+    defaultWidth: widthRaw >= 7 && widthRaw <= 11 ? widthRaw : defaultFieldSize().width,
+    defaultHeight: heightRaw >= 7 && heightRaw <= 11 ? heightRaw : defaultFieldSize().height,
   };
 }
 
@@ -365,40 +358,6 @@ function panelPreferences(draft) {
           </div>
         </div>
         ${statusSlot('preferences:board')}
-      </div>
-    </section>`;
-}
-
-function panelNotifications(draft) {
-  return `
-    <section class="nl-settings__panel" data-settings-panel="notifications" hidden>
-      <h3 class="nl-settings__panel-title">Notifications</h3>
-      <p class="nl-settings__panel-lead">Choose which emails NumberLink can send you.</p>
-      <div class="nl-settings__block">
-        <h4 class="nl-settings__block-title">Email</h4>
-        <div class="nl-settings__switch-row">
-          <div class="nl-settings__switch-copy">
-            <strong>Product updates</strong>
-            <span>New features and occasional tips</span>
-          </div>
-          <label class="nl-settings__switch">
-            <input type="checkbox" data-settings-notify="notifyProduct" ${draft.notifyProduct ? 'checked' : ''} aria-label="Product updates emails" />
-            <span class="nl-settings__switch-track" aria-hidden="true"></span>
-            <span class="nl-settings__switch-thumb" aria-hidden="true"></span>
-          </label>
-        </div>
-        <div class="nl-settings__switch-row">
-          <div class="nl-settings__switch-copy">
-            <strong>Scores &amp; leaderboard</strong>
-            <span>Personal bests and ranking changes</span>
-          </div>
-          <label class="nl-settings__switch">
-            <input type="checkbox" data-settings-notify="notifyScores" ${draft.notifyScores ? 'checked' : ''} aria-label="Scores and leaderboard emails" />
-            <span class="nl-settings__switch-track" aria-hidden="true"></span>
-            <span class="nl-settings__switch-thumb" aria-hidden="true"></span>
-          </label>
-        </div>
-        ${statusSlot('notifications:email')}
       </div>
     </section>`;
 }
@@ -546,7 +505,7 @@ function buildMarkup(draft, sessions, section) {
         class="nl-settings__nav-btn"
         data-settings-nav="${s.id}"
         aria-current="${s.id === section ? 'page' : 'false'}"
-      >${escapeHtml(s.label)}</button>`
+      ><span class="nl-settings__nav-icon" aria-hidden="true">${settingsNavIcon(s.id)}</span><span>${escapeHtml(s.label)}</span></button>`
   ).join('');
 
   return `
@@ -570,7 +529,6 @@ function buildMarkup(draft, sessions, section) {
           <div class="nl-settings__main">
             ${panelProfile(draft)}
             ${panelPreferences(draft)}
-            ${panelNotifications(draft)}
             ${panelSecurity(draft, sessions)}
           </div>
         </div>
@@ -636,7 +594,6 @@ function showSection(id) {
 }
 
 function persistDraftAndNotify() {
-  writeDraft(settingsState().draft);
   if (typeof settingsState().onLocalProfileChange === 'function') {
     settingsState().onLocalProfileChange({
       username: settingsState().draft.username,
@@ -646,7 +603,7 @@ function persistDraftAndNotify() {
   }
 }
 
-const AVATAR_MAX_BYTES = 1024 * 1024;
+const AVATAR_MAX_BYTES = 7 * 1024 * 1024;
 
 async function updateProfile({ username, email }) {
   const response = await fetch(`${backendApiUrl()}/me/profile`, {
@@ -747,7 +704,7 @@ async function onAvatarFileChange(overlay, event) {
 
   const allowed = ['image/jpeg', 'image/png', 'image/webp'];
   if (!allowed.includes(file.type) || file.size > AVATAR_MAX_BYTES) {
-    setStatus('profile:avatar', 'Use a PNG, JPG, or WebP under 1 MB.', true);
+    setStatus('profile:avatar', 'Use a PNG, JPG, or WebP under 7 MB.', true);
     input.value = '';
         return;
   }
@@ -907,7 +864,6 @@ async function refreshSettingsUserFlags() {
   applyEmailChangeFlags(settingsState().draft, user);
   settingsState().draft.username = settingsState().draft.username || user.username;
   settingsState().draft.email = user.email || '';
-  writeDraft(settingsState().draft);
   return user;
 }
 
@@ -1196,7 +1152,8 @@ function buildEmailResultDialog() {
 async function onProfileSubmit(overlay, event) {
   event.preventDefault();
 
-  const form = event.currentTarget;
+  const form = event.target.closest('[data-settings-form="profile"]');
+  if (!form) return;
   const usernameInput = overlay.querySelector('#settings-username');
   const emailInput = overlay.querySelector('#settings-email');
   const submitBtn = form.querySelector('button[type="submit"]');
@@ -1321,8 +1278,11 @@ async function changeAccountPassword(currentPassword, newPassword) {
     body: JSON.stringify({ currentPassword, newPassword }),
   });
   const data = await response.json().catch(() => ({}));
+  if (response.status === 401 || response.status === 403) {
+    throw new Error('Sign in again to update your password.');
+  }
   if (!response.ok) {
-    throw new Error(data.message || 'Could not update password.');
+    throw new Error(data.message || data.detail || data.error || 'Could not update password.');
   }
   return data;
 }
@@ -1330,7 +1290,8 @@ async function changeAccountPassword(currentPassword, newPassword) {
 async function onPasswordSubmit(event) {
   event.preventDefault();
 
-  const form = event.currentTarget;
+  const form = event.target.closest('[data-settings-form="password"]');
+  if (!form) return;
   const current = form.querySelector('[name="current"]')?.value ?? '';
   const next = form.querySelector('[name="newPassword"]')?.value ?? '';
   const confirm = form.querySelector('[name="confirm"]')?.value ?? '';
@@ -1356,7 +1317,8 @@ async function onPasswordSubmit(event) {
   try {
     await changeAccountPassword(current, next);
     form.reset();
-    setStatus('security:password', 'Password updated.');
+    showSection('security');
+    setStatus('security:password', 'Password updated. Use the new password the next time you log in.');
   } catch (err) {
     setStatus('security:password', err.message || 'Could not update password.', true);
   } finally {
@@ -1666,7 +1628,6 @@ function onSoundPrefToggle(overlay, event) {
   const on = event.target.checked;
   settingsState().draft.soundOn = on;
   localStorage.setItem('sound', on ? 'play' : 'muted');
-  writeDraft(settingsState().draft);
   syncPlayPageSoundButton(on);
 
   const copy = overlay.querySelector('[data-settings-sound]')?.closest('.nl-settings__switch-row')?.querySelector('.nl-settings__switch-copy span');
@@ -1681,7 +1642,6 @@ function onBoardSizeChange(overlay) {
   settingsState().draft.defaultHeight = height;
   localStorage.setItem('field_width', String(width));
   localStorage.setItem('field_height', String(height));
-  writeDraft(settingsState().draft);
 
   const widthEl = document.getElementById('width');
   const heightEl = document.getElementById('height');
@@ -1691,20 +1651,16 @@ function onBoardSizeChange(overlay) {
   setStatus('preferences:board', `Default board set to ${width}×${height}.`);
 }
 
-function onNotifyToggle(event) {
-  const key = event.target.getAttribute('data-settings-notify');
-  if (!key) return;
-  settingsState().draft[key] = event.target.checked;
-  writeDraft(settingsState().draft);
-  setStatus('notifications:email', 'Notification preferences saved.');
-}
-
 function bindOverlay(overlay) {
   if (!overlay || overlay.dataset.bound === '1') return;
   overlay.dataset.bound = '1';
 
   overlay.querySelectorAll('[data-settings-close]').forEach((btn) => {
     btn.addEventListener('click', () => closeAccountSettings());
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeAccountSettings();
   });
 
   overlay.querySelectorAll('[data-settings-nav]').forEach((btn) => {
@@ -1723,8 +1679,16 @@ function bindOverlay(overlay) {
     onAvatarClear(overlay);
   });
 
-  overlay.querySelector('[data-settings-form="profile"]')?.addEventListener('submit', (e) => {
-    onProfileSubmit(overlay, e);
+  overlay.addEventListener('submit', (e) => {
+    if (e.target.closest('[data-settings-form="profile"]')) {
+      e.preventDefault();
+      onProfileSubmit(overlay, e);
+      return;
+    }
+    if (e.target.closest('[data-settings-form="password"]')) {
+      e.preventDefault();
+      onPasswordSubmit(e);
+    }
   });
 
   overlay.querySelector('[data-settings-email-code]')?.addEventListener('click', () => {
@@ -1743,7 +1707,6 @@ function bindOverlay(overlay) {
     btn.addEventListener('click', () => onProviderUnlinkClick(btn));
   });
 
-  overlay.querySelector('[data-settings-form="password"]')?.addEventListener('submit', onPasswordSubmit);
 
   overlay.querySelector('[data-settings-sessions]')?.addEventListener('click', onSessionRevoke);
 
@@ -1773,10 +1736,6 @@ function bindOverlay(overlay) {
 
   overlay.querySelector('[data-settings-board-height]')?.addEventListener('change', () => {
     onBoardSizeChange(overlay);
-  });
-
-  overlay.querySelectorAll('[data-settings-notify]').forEach((input) => {
-    input.addEventListener('change', onNotifyToggle);
   });
 }
 
@@ -1827,15 +1786,9 @@ async function closeAccountSettings() {
 
 function getSettingsGearButtonHtml() {
   return `
-    <button
-      type="button"
-      class="auth-menu__settings"
-      role="menuitem"
-      data-auth-settings
-      aria-label="Account settings"
-      title="Account settings"
-    >
-      ${gearIcon()}
+    <button type="button" class="auth-menu__settings" role="menuitem" data-auth-settings>
+      <span class="auth-menu__settings-icon" aria-hidden="true">${gearIcon()}</span>
+      <span>Settings</span>
     </button>`;
 }
 
@@ -2941,19 +2894,13 @@ function setDocumentAuthState(user) {
 function renderGuestAuth(authRoot) {
   authRoot.dataset.authState = 'guest';
   authRoot.innerHTML = `
-    <button type="button" class="auth-btn auth-btn--ghost" data-auth-open="login">Login</button>
+    <button type="button" class="auth-btn auth-btn--ghost" data-auth-open="login">Log in</button>
     <button type="button" class="auth-btn auth-btn--solid" data-auth-open="signup">Sign up</button>
   `;
 
   authRoot.querySelectorAll('[data-auth-open]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const container = document.querySelector('.header_container');
-      container?.classList.remove('menu-open');
-      const toggle = container?.querySelector('.menu_toggle');
-      if (toggle) {
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Open menu');
-      }
+      closeMobileNav();
       openAuth(btn.getAttribute('data-auth-open'));
     });
   });
@@ -3063,8 +3010,8 @@ function buildUserMenuHtml(name, email, initials, avatarUrl) {
             <p class="auth-menu__name">${name}</p>
             ${email ? `<p class="auth-menu__email">${email}</p>` : ''}
           </div>
-          ${getSettingsGearButtonHtml()}
         </div>
+        ${getSettingsGearButtonHtml()}
         <button type="button" class="auth-menu__logout" role="menuitem" data-auth-logout>
           <span class="auth-menu__logout-icon" aria-hidden="true">${logoutIcon()}</span>
           <span>Log out</span>
@@ -3124,20 +3071,6 @@ function bindUserMenu(authRoot, user) {
   });
 }
 
-function restoreLocalProfileDraft(authRoot, user) {
-  try {
-    const raw = localStorage.getItem('numberlink.settings.draft');
-    if (!raw) return;
-    const draft = JSON.parse(raw);
-    if (draft?.userId && user?.id && draft.userId !== user.id) return;
-    applyLocalProfileToHeader(authRoot, {
-      username: draft.username || user.username,
-      email: draft.email ?? user.email,
-      avatarUrl: user.avatarUrl || draft.avatarUrl || null,
-    });
-  } catch (_) {}
-}
-
 function renderUserAuth(authRoot, user) {
   const name = escapeHtml(user.username || 'Player');
   const emailRaw = user.email ? String(user.email).trim() : '';
@@ -3147,7 +3080,6 @@ function renderUserAuth(authRoot, user) {
   authRoot.dataset.authState = 'user';
   authRoot.innerHTML = buildUserMenuHtml(name, email, initials, user.avatarUrl);
   bindUserMenu(authRoot, user);
-  restoreLocalProfileDraft(authRoot, user);
 }
 
 async function refreshAuthHeader(authRoot) {
@@ -3321,6 +3253,16 @@ function bindAuthOverlay(auth, overlay) {
     btn.addEventListener('click', closeAuth);
   });
 
+  overlay.addEventListener('click', (e) => {
+    if (e.target !== overlay) return;
+    const mode = overlay.getAttribute('data-auth-overlay');
+    if (mode === 'email-password' || mode === 'email-code' || mode === 'email-result') {
+      closeEmailChangeOverlays();
+    } else {
+      closeAuth();
+    }
+  });
+
   overlay.querySelectorAll('[data-auth-switch]').forEach((btn) => {
     btn.addEventListener('click', () => openAuth(btn.getAttribute('data-auth-switch')));
   });
@@ -3425,6 +3367,9 @@ function handleOAuthReturn(auth) {
 }
 
 function initAuthUi() {
+  try {
+    localStorage.removeItem('numberlink.settings.draft');
+  } catch (_) {}
   const container = document.querySelector('.header_container');
   if (!container || container.querySelector('.header_auth')) return;
 
@@ -3496,14 +3441,66 @@ function burgerIcon() {
 }
 
 function mobileCloseIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+}
+
+function syncMobileHeaderBarHeight(container) {
+  if (!container) return;
+  const header = document.querySelector('header');
+  const top = header ? Math.round(header.getBoundingClientRect().bottom) : container.offsetHeight;
+  document.documentElement.style.setProperty('--mobile-header-bar-h', `${top}px`);
+}
+
+function syncMobileNavPlacement(container, drawer, navLinks) {
+  const github = container.querySelector('.header_github');
+  if (window.matchMedia('(max-width: 576px)').matches) {
+    navLinks.forEach((link) => drawer.appendChild(link));
+  } else {
+    navLinks.forEach((link) => container.insertBefore(link, github));
+  }
+}
+
+function closeMobileNav() {
+  const container = document.querySelector('.header_container');
+  const drawer = document.querySelector('.mobile-nav-drawer');
+  const scrim = document.querySelector('.mobile-nav-scrim');
+  if (!container?.classList.contains('menu-open')) return;
+
+  container.classList.remove('menu-open');
+  if (drawer) drawer.hidden = true;
+  if (scrim) scrim.hidden = true;
+  const toggle = container.querySelector('.menu_toggle');
+  if (toggle) {
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open menu');
+    toggle.innerHTML = burgerIcon();
+  }
 }
 
 function initMobileNav() {
+  const header = document.querySelector('header');
   const container = document.querySelector('.header_container');
-  if (!container || container.querySelector('.menu_toggle')) return;
+  if (!header || !container || container.querySelector('.menu_toggle')) return;
+
+  const navLinks = [...container.querySelectorAll('a:not(.header_github):not(.numberlink_nav)')];
+  const drawer = document.createElement('div');
+  drawer.className = 'mobile-nav-drawer';
+  drawer.hidden = true;
+  document.body.appendChild(drawer);
+
+  const scrim = document.createElement('div');
+  scrim.className = 'mobile-nav-scrim';
+  scrim.hidden = true;
+  document.body.appendChild(scrim);
+  scrim.addEventListener('click', closeMobileNav);
+
+  const mq = window.matchMedia('(max-width: 576px)');
+  syncMobileNavPlacement(container, drawer, navLinks);
+  mq.addEventListener('change', () => {
+    closeMobileNav();
+    syncMobileNavPlacement(container, drawer, navLinks);
+    syncMobileHeaderBarHeight(container);
+  });
 
   const btn = document.createElement('button');
   btn.className = 'menu_toggle';
@@ -3513,33 +3510,86 @@ function initMobileNav() {
   btn.innerHTML = burgerIcon();
 
   container.prepend(btn);
+  syncMobileHeaderBarHeight(container);
+  window.addEventListener('resize', () => syncMobileHeaderBarHeight(container));
 
   btn.addEventListener('click', () => {
+    syncMobileHeaderBarHeight(container);
     const open = container.classList.toggle('menu-open');
+    drawer.hidden = !open;
+    scrim.hidden = !open;
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     btn.innerHTML = open ? mobileCloseIcon() : burgerIcon();
+    // Avoid sticky :hover / focus flash on auth buttons after the tap.
+    requestAnimationFrame(() => {
+      btn.blur();
+      container.querySelectorAll('.auth-btn').forEach((el) => el.blur());
+    });
+  });
+
+  drawer.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMobileNav);
   });
 }
 
 initMobileNav();
 
+const FIELD_SIZE_MIN = 7;
+const FIELD_SIZE_MAX = 11;
+const FIELD_DESKTOP_DEFAULT = { width: 9, height: 9 };
+const FIELD_MOBILE_DEFAULT = { width: 7, height: 7 };
+
+function isMobilePlayViewport() {
+    return window.matchMedia('(max-width: 576px)').matches;
+}
+
+function defaultFieldSize() {
+    return isMobilePlayViewport() ? FIELD_MOBILE_DEFAULT : FIELD_DESKTOP_DEFAULT;
+}
+
+function clampFieldDim(value, fallback) {
+    const n = Number(value);
+    if (Number.isInteger(n) && n >= FIELD_SIZE_MIN && n <= FIELD_SIZE_MAX) return n;
+    return fallback;
+}
+
+function storedFieldSize() {
+    const fallback = defaultFieldSize();
+    const storedWidth = localStorage.getItem('field_width');
+    const storedHeight = localStorage.getItem('field_height');
+    return {
+        width: storedWidth ? clampFieldDim(storedWidth, fallback.width) : fallback.width,
+        height: storedHeight ? clampFieldDim(storedHeight, fallback.height) : fallback.height,
+    };
+}
+
+function syncFieldSizeSelects(widthElement, heightElement, size) {
+    if (String(widthElement.value) !== String(size.width)) {
+        widthElement.value = String(size.width);
+    }
+    if (String(heightElement.value) !== String(size.height)) {
+        heightElement.value = String(size.height);
+    }
+}
+
 
 async function createBlankTable() {
     const table = document.getElementById('table_container');
     if (table) {
-        table.remove();
+        const slot = table.closest('.board-slot');
+        (slot || table).remove();
     }
 
-    const divider_line = document.querySelector('.field_container__divider');
-    if (!divider_line) { console.log('exit'); return; }
+    const topBlock = document.querySelector('.field_container__parent-block-1');
+    if (!topBlock) { console.log('exit'); return; }
 
-    const tableFrame = `<table id="table_container" class="unactive p-0 mx-auto">
+    const tableFrame = `<div class="board-slot"><table id="table_container" class="unactive p-0 mx-auto">
                             <tbody>
                             </tbody>
-                        </table>`;
+                        </table></div>`;
 
-    divider_line.insertAdjacentHTML('afterend', tableFrame);
+    topBlock.insertAdjacentHTML('afterend', tableFrame);
 
     const tableContent = document.querySelector('#table_container tbody');
     if (!tableContent) { console.log('exit'); return; }
@@ -3552,8 +3602,13 @@ async function createBlankTable() {
     await widthElement.updateComplete;
     await heightElement.updateComplete;
 
-    const width = Number(widthElement.value) || 9;
-    const height = Number(heightElement.value) || 9;
+    const size = storedFieldSize();
+    syncFieldSizeSelects(widthElement, heightElement, size);
+    await widthElement.updateComplete;
+    await heightElement.updateComplete;
+
+    const width = size.width;
+    const height = size.height;
 
     let fullContent = '';
 
@@ -3577,6 +3632,29 @@ async function createBlankTable() {
 }
 
 createBlankTable().then(() => cellNumSelectionListener());
+
+function currentGridSize() {
+    const table = document.getElementById('table_container');
+    const widthEl = document.getElementById('width');
+    const heightEl = document.getElementById('height');
+    const cols = table?.querySelectorAll('tr:first-child .cell').length
+        || Number(widthEl?.value)
+        || 9;
+    const rows = table?.querySelectorAll('tr').length
+        || Number(heightEl?.value)
+        || 9;
+    return { cols, rows };
+}
+
+function resyncGameBoard() {
+    const { cols, rows } = currentGridSize();
+    requestAnimationFrame(() => {
+        syncGameBoardScale(cols, rows);
+        requestAnimationFrame(() => syncGameBoardScale(cols, rows));
+    });
+}
+
+window.addEventListener('resize', resyncGameBoard);
 
 
 function syncGameBoardScale(width, height) {
@@ -3616,11 +3694,16 @@ function syncGameBoardScale(width, height) {
         (parseFloat(tableStyles.borderTopWidth) || 0) +
         (parseFloat(tableStyles.borderBottomWidth) || 0);
 
+    const setupChrome = topBlock?.offsetHeight ?? 0;
+    const dividerChrome = divider && !topBlock?.contains(divider)
+        ? (divider.offsetHeight || 0)
+        : 0;
+
     const chromeHeight =
         (header?.offsetHeight ?? 0) +
         outerGap * 2 +
-        (topBlock?.offsetHeight ?? 0) +
-        (divider?.offsetHeight ?? 0) +
+        setupChrome +
+        dividerChrome +
         (playBlock?.offsetHeight ?? 0) +
         playMarginY +
         tableMarginY +
@@ -3629,30 +3712,82 @@ function syncGameBoardScale(width, height) {
         parseFloat(fieldStyles.paddingBottom) +
         12;
 
-    const availableHeight = Math.max(140, window.innerHeight - chromeHeight);
+    const MIN_PLAYABLE_CELL = 32;
+    const MAX_CELL = 72;
+    const canFitShrink = window.innerHeight >= 640;
+
+    const isNarrow = window.matchMedia('(max-width: 576px)').matches;
+    const slot = table.closest('.board-slot');
+
+    const applyCellSize = (cellPx) => {
+        table.style.setProperty('--cell-px', `${cellPx}px`);
+        table.style.width = `${cellPx * cols}px`;
+        table.querySelectorAll('.cell').forEach((cell) => {
+            cell.style.width = `${cellPx}px`;
+            cell.style.height = `${cellPx}px`;
+        });
+    };
+
+    if (isNarrow) {
+        const slotStyles = slot ? getComputedStyle(slot) : null;
+        const slotPadX = slotStyles
+            ? (parseFloat(slotStyles.paddingLeft) || 0) + (parseFloat(slotStyles.paddingRight) || 0)
+            : 0;
+        const slotPadY = slotStyles
+            ? (parseFloat(slotStyles.paddingTop) || 0) + (parseFloat(slotStyles.paddingBottom) || 0)
+            : 0;
+        const slotHeight = slot ? slot.clientHeight - slotPadY : 0;
+        const slotWidth = slot ? slot.clientWidth - slotPadX : 0;
+        const useSlot = canFitShrink && slotHeight >= 48 && slotWidth >= 48;
+
+        const gap = fieldStyles.rowGap && fieldStyles.rowGap !== 'normal'
+            ? (parseFloat(fieldStyles.rowGap) || 0)
+            : 0;
+        const flexGaps = gap * 2;
+
+        const availableWidth = useSlot
+            ? Math.max(48, slotWidth - 8)
+            : Math.max(48, field.clientWidth - 32);
+        const widthCell = Math.min(MAX_CELL, Math.floor(availableWidth / cols));
+
+        if (!canFitShrink) {
+            applyCellSize(Math.max(MIN_PLAYABLE_CELL, widthCell));
+            return;
+        }
+
+        const availableHeight = useSlot
+            ? Math.max(48, slotHeight - borderY)
+            : Math.max(48, window.innerHeight - chromeHeight - flexGaps);
+
+        let cellPx = Math.min(
+            MAX_CELL,
+            Math.floor(availableHeight / rows),
+            widthCell
+        );
+        cellPx = Math.max(MIN_PLAYABLE_CELL, cellPx);
+        applyCellSize(cellPx);
+        return;
+    }
+
     const availableWidth = Math.max(140, field.clientWidth - 32);
+    const widthCell = Math.min(MAX_CELL, Math.floor(availableWidth / cols));
 
+    if (!canFitShrink) {
+        applyCellSize(Math.max(MIN_PLAYABLE_CELL, widthCell));
+        return;
+    }
+
+    const availableHeight = Math.max(140, window.innerHeight - chromeHeight);
     let cellPx = Math.min(
-        72,
+        MAX_CELL,
         Math.floor(availableHeight / maxDim),
-        Math.floor(availableWidth / cols)
+        widthCell
     );
-    cellPx = Math.max(32, cellPx);
-
-    table.style.setProperty('--cell-px', `${cellPx}px`);
-    table.style.width = `${cellPx * cols}px`;
-    table.querySelectorAll('.cell').forEach((cell) => {
-        cell.style.width = `${cellPx}px`;
-        cell.style.height = `${cellPx}px`;
-    });
+    cellPx = Math.max(MIN_PLAYABLE_CELL, cellPx);
+    applyCellSize(cellPx);
 }
 
 async function cellNumSelectionListener() {
-
-    const minMapWidth = 7;
-    const maxMapWidth = 11;
-    const minMapHeight = 7;
-    const maxMapHeight = 11;
 
     const widthElement = document.getElementById("width");
     const heightElement = document.getElementById("height");
@@ -3660,44 +3795,27 @@ async function cellNumSelectionListener() {
     if (!widthElement) { console.log('exit'); return; }
     if (!heightElement) { console.log('exit'); return; }
 
-    //
-    //
-
-    // wait until "Material web component" initialized
     await widthElement.updateComplete;
     await heightElement.updateComplete;
 
-    //
-    //
+    const storedWidth = localStorage.getItem("field_width");
+    const storedHeight = localStorage.getItem("field_height");
 
-    const localStorageWidth = localStorage.getItem("field_width");
-    const localStorageHeight = localStorage.getItem("field_height");
-
-    if (localStorageWidth != null && localStorageWidth.length != 0) {
-        if (localStorageWidth < minMapWidth || localStorageWidth > maxMapWidth) {
-            localStorage.setItem("field_width", widthElement.value);
-            window.location.reload();
-
-            console.error("Map size is out of range (localstorage)");
-            return;
-        } else {
-            widthElement.value = localStorageWidth;
-        }
+    if (storedWidth && clampFieldDim(storedWidth, 0) === 0) {
+        localStorage.setItem("field_width", String(defaultFieldSize().width));
+        window.location.reload();
+        console.error("Map size is out of range (localstorage)");
+        return;
     }
 
-    if (localStorageHeight != null && localStorageHeight.length != 0) {
-        if (localStorageHeight < minMapHeight || localStorageHeight > maxMapHeight) {
-            localStorage.setItem("field_height", heightElement.value);
-            window.location.reload();
-
-            console.error("Map size is out of range (localstorage)");
-            return;
-        } else {
-            heightElement.value = localStorageHeight;
-        }
+    if (storedHeight && clampFieldDim(storedHeight, 0) === 0) {
+        localStorage.setItem("field_height", String(defaultFieldSize().height));
+        window.location.reload();
+        console.error("Map size is out of range (localstorage)");
+        return;
     }
 
-    // Rebuild grid after restoring size from localStorage so selects and map match
+    syncFieldSizeSelects(widthElement, heightElement, storedFieldSize());
     await widthElement.updateComplete;
     await heightElement.updateComplete;
     await createBlankTable();
@@ -3965,22 +4083,26 @@ function undoMove() {
     if (!undoButton) { console.log('exit'); return; }
 
     undoButton.addEventListener('click', () => {
-        const moves = JSON.parse(localStorage.getItem("move")) || [];
-        if (!moves || moves.length === 0) return;
+        try {
+            const moves = JSON.parse(localStorage.getItem("move")) || [];
+            if (!moves || moves.length === 0) return;
 
-        const lastMoves = moves[moves.length - 1];
-        for (let i = 0; i < lastMoves.length; i++) {
-            const element = document.getElementById(`${lastMoves[i]}`);
-            if (!element) continue;
+            const lastMoves = moves[moves.length - 1];
+            for (let i = 0; i < lastMoves.length; i++) {
+                const element = document.getElementById(`${lastMoves[i]}`);
+                if (!element) continue;
 
-            element.removeAttribute("id");
-            element.removeAttribute("value");
-            element.removeAttribute("class");
-            element.removeAttribute("style");
+                element.removeAttribute("id");
+                element.removeAttribute("value");
+                element.removeAttribute("class");
+                element.removeAttribute("style");
+            }
+
+            moves.pop();
+            localStorage.setItem("move", JSON.stringify(moves));
+        } finally {
+            undoButton.blur();
         }
-
-        moves.pop();
-        localStorage.setItem("move", JSON.stringify(moves));
     })
 }
 
@@ -3990,20 +4112,24 @@ function resetMove() {
     if (!resetButton) { console.log('exit'); return; }
 
     resetButton.addEventListener('click', () => {
-        const table = document.getElementById('table_container');
-        if (!table) { console.log('exit'); return; }
+        try {
+            const table = document.getElementById('table_container');
+            if (!table) { console.log('exit'); return; }
 
-        const spans = table.querySelectorAll('.cell span');
-        if (!spans) { console.log('exit'); return; }
+            const spans = table.querySelectorAll('.cell span');
+            if (!spans) { console.log('exit'); return; }
 
-        spans.forEach((element) => {
-            if (!element.classList.contains('head-tail') && element.classList.contains('active')) {
-                element.removeAttribute("id");
-                element.removeAttribute("value");
-                element.removeAttribute("class");
-                element.removeAttribute("style");
-            }
-        })
+            spans.forEach((element) => {
+                if (!element.classList.contains('head-tail') && element.classList.contains('active')) {
+                    element.removeAttribute("id");
+                    element.removeAttribute("value");
+                    element.removeAttribute("class");
+                    element.removeAttribute("style");
+                }
+            })
+        } finally {
+            resetButton.blur();
+        }
     })
 
     localStorage.setItem("move", JSON.stringify([]));
@@ -4082,7 +4208,7 @@ function gameTimerHtml() {
 
 function gameControlsHtml() {
   return `
-                        <div class="container d-flex justify-content-center mb-4 pb-1">
+                        <div class="game-controls">
 
                             <div class="btn btn-outline-secondary text-center d-flex justify-content-center align-items-center section-button"
                                 id="undo_button">Undo<span class="d-flex align-items-center ps-1"><svg
@@ -4139,10 +4265,12 @@ function replaceFieldTopSection() {
 
     fieldHeader.remove();
     divider.remove();
+    document.querySelector('.field_container__map-controls')?.remove();
     button.remove();
     runAnimation();
   fieldContainer.insertAdjacentHTML('afterbegin', gameTimerHtml());
   buttonContainer.innerHTML = gameControlsHtml();
+  resyncGameBoard();
 }
 
 function runAnimation() {
@@ -4251,6 +4379,7 @@ function toggleMuteSound() {
         </svg></span>`;
             localStorage.setItem("sound", "muted");
         }
+        muteButton.blur();
     });
 }
 
@@ -4331,10 +4460,12 @@ async function helpConnect(timerId, gameState) {
 
       applyHintMap(board.spans, board.width, board.height, mapResponse);
       await finishRoundIfWon(timerId, gameState);
-        } catch (error) {
+    } catch (error) {
       console.error(error);
-        }
-    });
+    } finally {
+      helpButton.blur();
+    }
+  });
 }
 
 function playClickSound() {
@@ -4378,7 +4509,7 @@ function dispCongratWindow() {
     const time = timerElement.innerText;
 
     const mainElement = document.getElementById('main');
-    const trophyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M17 5h3a1 1 0 0 1 1 1c0 2.5-2 4.5-4 4.5"/><path d="M7 5H4a1 1 0 0 0-1 1c0 2.5 2 4.5 4 4.5"/></svg>`;
+    const trophyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M17 5h3a1 1 0 0 1 1 1c0 2.5-2 4.5-4 4.5"/><path d="M7 5H4a1 1 0 0 0-1 1c0 2.5 2 4.5 4 4.5"/><path d="M4 1v1.6"/><path d="M3.2 1.8h1.6"/><path d="M20 .8v2.4"/><path d="M18.8 2h2.4"/></svg>`;
     const modalResultWindow = `<div class="win-overlay" id="winOverlay">
       <div class="win-modal" role="alertdialog" aria-modal="true" aria-labelledby="win-title">
         <button type="button" class="win-modal__close" data-win-menu aria-label="Back to menu">${closeIcon()}</button>
@@ -4428,6 +4559,12 @@ function openLeaderboard() {
 }
 
 function backToMenu() {
+    const overlay = document.getElementById('winOverlay');
+    overlay?.addEventListener('click', (e) => {
+        if (e.target !== overlay) return;
+        localStorage.setItem('autostart', 'off');
+        window.location.href = '/';
+    });
     document.querySelectorAll('[data-win-menu]').forEach((el) => {
         el.addEventListener('click', () => {
             localStorage.setItem('autostart', 'off');
@@ -4489,6 +4626,7 @@ function prepareRound() {
 
     const startGame = () => {
         if (!document.getElementById('play_button')) return;
+        closeMobileNav();
         prepareRound();
     };
 
