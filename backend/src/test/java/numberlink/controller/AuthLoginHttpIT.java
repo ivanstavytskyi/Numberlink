@@ -103,6 +103,48 @@ class AuthLoginHttpIT {
                 .jsonPath("$.email").isEqualTo(email);
     }
 
+    @Test
+    void changePassword_persistsHashSoOldPasswordStopsWorking() {
+        String nextPassword = "Password!2";
+
+        EntityExchangeResult<byte[]> login = http.post()
+                .uri("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("login", username, "password", PASSWORD))
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .returnResult();
+
+        String cookie = cookieHeader(login.getResponseHeaders());
+
+        http.put()
+                .uri("/api/me/password")
+                .header(HttpHeaders.COOKIE, cookie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("currentPassword", PASSWORD, "newPassword", nextPassword))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.ok").isEqualTo(true);
+
+        http.post()
+                .uri("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("login", username, "password", PASSWORD))
+                .exchange()
+                .expectStatus().isUnauthorized();
+
+        http.post()
+                .uri("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Map.of("login", username, "password", nextPassword))
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.username").isEqualTo(username);
+    }
+
     private static String cookieHeader(HttpHeaders headers) {
         List<String> setCookies = headers.get(HttpHeaders.SET_COOKIE);
         assertThat(setCookies).isNotEmpty();
