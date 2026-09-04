@@ -236,16 +236,15 @@ public class AuthService {
         }
 
         UserEntity user = mail.getUser();
-        LocalUserEntity local = localUserRepository.findByUserId(user.getId())
-                .orElseThrow(InvalidPasswordResetTokenException::new);
+        if (localUserRepository.findByUserId(user.getId()).isEmpty()) {
+            throw new InvalidPasswordResetTokenException();
+        }
 
         Instant now = Instant.now();
         mail.setUsedAt(now);
         mailTokenRepository.save(mail);
         mailTokenRepository.deleteUnusedByUserIdAndAction(user.getId(), MailTokenAction.PASSWORD_RESET);
-
-        local.setEncodedPassword(passwordEncoder.encode(newPassword));
-        localUserRepository.save(local);
+        localUserRepository.updateEncodedPassword(user.getId(), passwordEncoder.encode(newPassword));
     }
 
     private void sendPasswordResetEmail(UserEntity user) {
@@ -379,9 +378,9 @@ public class AuthService {
     }
 
     public void bumpSessionEpoch(UserEntity user, HttpServletRequest request) {
-        int next = user.getSessionEpoch() + 1;
+        userRepository.incrementSessionEpoch(user.getId());
+        int next = userRepository.findSessionEpochById(user.getId()).orElse(user.getSessionEpoch() + 1);
         user.setSessionEpoch(next);
-        userRepository.save(user);
         if (request != null) {
             var session = request.getSession(false);
             if (session != null) {
@@ -433,8 +432,13 @@ public class AuthService {
             throw new PasswordUnchangedException();
         }
 
-        local.setEncodedPassword(passwordEncoder.encode(newPassword));
-        localUserRepository.save(local);
+        int updated = localUserRepository.updateEncodedPassword(
+                user.getId(),
+                passwordEncoder.encode(newPassword)
+        );
+        if (updated != 1) {
+            throw new NoLocalPasswordException();
+        }
         bumpSessionEpoch(user, request);
     }
 

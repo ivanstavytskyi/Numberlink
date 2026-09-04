@@ -19,7 +19,7 @@ public interface UserSessionRepository extends JpaRepository<UserSessionEntity, 
 
     List<UserSessionEntity> findByUser_IdAndRevokedAtIsNullOrderByLastSeenAtDesc(UUID userId);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
             UPDATE UserSession s
             SET s.revokedAt = :now
@@ -33,7 +33,7 @@ public interface UserSessionRepository extends JpaRepository<UserSessionEntity, 
             @Param("now") Instant now
     );
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
             UPDATE UserSession s
             SET s.revokedAt = :now
