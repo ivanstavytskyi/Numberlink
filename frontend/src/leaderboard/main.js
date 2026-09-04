@@ -9,19 +9,8 @@ function backendApiUrl() {
   return `${backendOrigin()}/api`;
 }
 
-/* ——— settings ——— */
-
-/**
- * Account settings modal.
- * Profile save: PUT /api/me/profile. Avatar: PUT/DELETE /api/me/avatar (max 1 MB).
- */
-
-function draftStorageKey() {
-  return 'numberlink.settings.draft';
-}
-
 function closeIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
 }
 
 function gearIcon() {
@@ -90,9 +79,29 @@ function settingsSections() {
   return [
   { id: 'profile', label: 'Profile' },
   { id: 'preferences', label: 'Preferences' },
-  { id: 'notifications', label: 'Notifications' },
   { id: 'security', label: 'Security' },
 ];
+}
+
+function settingsNavIcon(id) {
+  const svg = (paths) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+  if (id === 'profile') {
+    return svg(
+      '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>'
+    );
+  }
+  if (id === 'preferences') {
+    return svg(
+      '<path d="M21 4h-7"/><path d="M10 4H3"/><path d="M21 12h-9"/><path d="M8 12H3"/><path d="M21 20h-5"/><path d="M12 20H3"/><path d="M14 2v4"/><path d="M8 10v4"/><path d="M16 18v4"/>'
+    );
+  }
+  if (id === 'security') {
+    return svg(
+      '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>'
+    );
+  }
+  return '';
 }
 
 /** Live sessions from GET /api/me/sessions. */
@@ -218,50 +227,26 @@ function userInitials(username = '') {
   return cleaned.slice(0, 2).toUpperCase();
 }
 
-function readDraft(userId) {
-  try {
-    const raw = localStorage.getItem(draftStorageKey());
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (parsed?.userId && userId && parsed.userId !== userId) return null;
-    return parsed;
-  } catch (_) {
-    return null;
-  }
-}
-
-function writeDraft(draft) {
-  try {
-    localStorage.setItem(draftStorageKey(), JSON.stringify(draft));
-  } catch (_) {
-    /* ignore quota */
-  }
-}
-
 function buildDraftFromUser(user) {
-  const saved = readDraft(user?.id);
   const sound = localStorage.getItem('sound');
   const widthRaw = Number(localStorage.getItem('field_width'));
   const heightRaw = Number(localStorage.getItem('field_height'));
   return {
     userId: user?.id || null,
-    username: saved?.username ?? user?.username ?? '',
+    username: user?.username ?? '',
     email: user?.email ?? '',
     hasPassword: Boolean(user?.hasPassword),
     emailManagedBy: user?.emailManagedBy || null,
     canEditEmail: user?.canEditEmail !== false && !user?.pendingEmail,
     pendingEmail: user?.pendingEmail || '',
     pendingExpiresAt: user?.pendingExpiresAt || null,
-    avatarUrl: user?.avatarUrl || saved?.avatarUrl || null,
+    avatarUrl: user?.avatarUrl || null,
     googleAccount: oauthAccountFromUser(user, 'GOOGLE'),
     githubAccount: oauthAccountFromUser(user, 'GITHUB'),
     twoFactorEnabled: Boolean(user?.twoFactorEnabled),
     soundOn: sound !== 'muted',
     defaultWidth: widthRaw >= 7 && widthRaw <= 11 ? widthRaw : 7,
     defaultHeight: heightRaw >= 7 && heightRaw <= 11 ? heightRaw : 7,
-    notifyProduct: saved?.notifyProduct ?? true,
-    notifyScores: saved?.notifyScores ?? true,
-    notifyReviews: saved?.notifyReviews ?? false,
   };
 }
 
@@ -370,40 +355,6 @@ function panelPreferences(draft) {
           </div>
         </div>
         ${statusSlot('preferences:board')}
-      </div>
-    </section>`;
-}
-
-function panelNotifications(draft) {
-  return `
-    <section class="nl-settings__panel" data-settings-panel="notifications" hidden>
-      <h3 class="nl-settings__panel-title">Notifications</h3>
-      <p class="nl-settings__panel-lead">Choose which emails NumberLink can send you.</p>
-      <div class="nl-settings__block">
-        <h4 class="nl-settings__block-title">Email</h4>
-        <div class="nl-settings__switch-row">
-          <div class="nl-settings__switch-copy">
-            <strong>Product updates</strong>
-            <span>New features and occasional tips</span>
-          </div>
-          <label class="nl-settings__switch">
-            <input type="checkbox" data-settings-notify="notifyProduct" ${draft.notifyProduct ? 'checked' : ''} aria-label="Product updates emails" />
-            <span class="nl-settings__switch-track" aria-hidden="true"></span>
-            <span class="nl-settings__switch-thumb" aria-hidden="true"></span>
-          </label>
-        </div>
-        <div class="nl-settings__switch-row">
-          <div class="nl-settings__switch-copy">
-            <strong>Scores &amp; leaderboard</strong>
-            <span>Personal bests and ranking changes</span>
-          </div>
-          <label class="nl-settings__switch">
-            <input type="checkbox" data-settings-notify="notifyScores" ${draft.notifyScores ? 'checked' : ''} aria-label="Scores and leaderboard emails" />
-            <span class="nl-settings__switch-track" aria-hidden="true"></span>
-            <span class="nl-settings__switch-thumb" aria-hidden="true"></span>
-          </label>
-        </div>
-        ${statusSlot('notifications:email')}
       </div>
     </section>`;
 }
@@ -551,7 +502,7 @@ function buildMarkup(draft, sessions, section) {
         class="nl-settings__nav-btn"
         data-settings-nav="${s.id}"
         aria-current="${s.id === section ? 'page' : 'false'}"
-      >${escapeHtml(s.label)}</button>`
+      ><span class="nl-settings__nav-icon" aria-hidden="true">${settingsNavIcon(s.id)}</span><span>${escapeHtml(s.label)}</span></button>`
   ).join('');
 
   return `
@@ -575,7 +526,6 @@ function buildMarkup(draft, sessions, section) {
           <div class="nl-settings__main">
             ${panelProfile(draft)}
             ${panelPreferences(draft)}
-            ${panelNotifications(draft)}
             ${panelSecurity(draft, sessions)}
           </div>
         </div>
@@ -641,7 +591,6 @@ function showSection(id) {
 }
 
 function persistDraftAndNotify() {
-  writeDraft(settingsState().draft);
   if (typeof settingsState().onLocalProfileChange === 'function') {
     settingsState().onLocalProfileChange({
       username: settingsState().draft.username,
@@ -651,7 +600,7 @@ function persistDraftAndNotify() {
   }
 }
 
-const AVATAR_MAX_BYTES = 1024 * 1024;
+const AVATAR_MAX_BYTES = 7 * 1024 * 1024;
 
 async function updateProfile({ username, email }) {
   const response = await fetch(`${backendApiUrl()}/me/profile`, {
@@ -752,7 +701,7 @@ async function onAvatarFileChange(overlay, event) {
 
   const allowed = ['image/jpeg', 'image/png', 'image/webp'];
   if (!allowed.includes(file.type) || file.size > AVATAR_MAX_BYTES) {
-    setStatus('profile:avatar', 'Use a PNG, JPG, or WebP under 1 MB.', true);
+    setStatus('profile:avatar', 'Use a PNG, JPG, or WebP under 7 MB.', true);
     input.value = '';
     return;
   }
@@ -912,7 +861,6 @@ async function refreshSettingsUserFlags() {
   applyEmailChangeFlags(settingsState().draft, user);
   settingsState().draft.username = settingsState().draft.username || user.username;
   settingsState().draft.email = user.email || '';
-  writeDraft(settingsState().draft);
   return user;
 }
 
@@ -1201,7 +1149,8 @@ function buildEmailResultDialog() {
 async function onProfileSubmit(overlay, event) {
   event.preventDefault();
 
-  const form = event.currentTarget;
+  const form = event.target.closest('[data-settings-form="profile"]');
+  if (!form) return;
   const usernameInput = overlay.querySelector('#settings-username');
   const emailInput = overlay.querySelector('#settings-email');
   const submitBtn = form.querySelector('button[type="submit"]');
@@ -1326,8 +1275,11 @@ async function changeAccountPassword(currentPassword, newPassword) {
     body: JSON.stringify({ currentPassword, newPassword }),
   });
   const data = await response.json().catch(() => ({}));
+  if (response.status === 401 || response.status === 403) {
+    throw new Error('Sign in again to update your password.');
+  }
   if (!response.ok) {
-    throw new Error(data.message || 'Could not update password.');
+    throw new Error(data.message || data.detail || data.error || 'Could not update password.');
   }
   return data;
 }
@@ -1335,7 +1287,8 @@ async function changeAccountPassword(currentPassword, newPassword) {
 async function onPasswordSubmit(event) {
   event.preventDefault();
 
-  const form = event.currentTarget;
+  const form = event.target.closest('[data-settings-form="password"]');
+  if (!form) return;
   const current = form.querySelector('[name="current"]')?.value ?? '';
   const next = form.querySelector('[name="newPassword"]')?.value ?? '';
   const confirm = form.querySelector('[name="confirm"]')?.value ?? '';
@@ -1361,7 +1314,8 @@ async function onPasswordSubmit(event) {
   try {
     await changeAccountPassword(current, next);
     form.reset();
-    setStatus('security:password', 'Password updated.');
+    showSection('security');
+    setStatus('security:password', 'Password updated. Use the new password the next time you log in.');
   } catch (err) {
     setStatus('security:password', err.message || 'Could not update password.', true);
   } finally {
@@ -1671,7 +1625,6 @@ function onSoundPrefToggle(overlay, event) {
   const on = event.target.checked;
   settingsState().draft.soundOn = on;
   localStorage.setItem('sound', on ? 'play' : 'muted');
-  writeDraft(settingsState().draft);
   syncPlayPageSoundButton(on);
 
   const copy = overlay.querySelector('[data-settings-sound]')?.closest('.nl-settings__switch-row')?.querySelector('.nl-settings__switch-copy span');
@@ -1686,7 +1639,6 @@ function onBoardSizeChange(overlay) {
   settingsState().draft.defaultHeight = height;
   localStorage.setItem('field_width', String(width));
   localStorage.setItem('field_height', String(height));
-  writeDraft(settingsState().draft);
 
   const widthEl = document.getElementById('width');
   const heightEl = document.getElementById('height');
@@ -1696,20 +1648,16 @@ function onBoardSizeChange(overlay) {
   setStatus('preferences:board', `Default board set to ${width}×${height}.`);
 }
 
-function onNotifyToggle(event) {
-  const key = event.target.getAttribute('data-settings-notify');
-  if (!key) return;
-  settingsState().draft[key] = event.target.checked;
-  writeDraft(settingsState().draft);
-  setStatus('notifications:email', 'Notification preferences saved.');
-}
-
 function bindOverlay(overlay) {
   if (!overlay || overlay.dataset.bound === '1') return;
   overlay.dataset.bound = '1';
 
   overlay.querySelectorAll('[data-settings-close]').forEach((btn) => {
     btn.addEventListener('click', () => closeAccountSettings());
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeAccountSettings();
   });
 
   overlay.querySelectorAll('[data-settings-nav]').forEach((btn) => {
@@ -1728,8 +1676,16 @@ function bindOverlay(overlay) {
     onAvatarClear(overlay);
   });
 
-  overlay.querySelector('[data-settings-form="profile"]')?.addEventListener('submit', (e) => {
-    onProfileSubmit(overlay, e);
+  overlay.addEventListener('submit', (e) => {
+    if (e.target.closest('[data-settings-form="profile"]')) {
+      e.preventDefault();
+      onProfileSubmit(overlay, e);
+      return;
+    }
+    if (e.target.closest('[data-settings-form="password"]')) {
+      e.preventDefault();
+      onPasswordSubmit(e);
+    }
   });
 
   overlay.querySelector('[data-settings-email-code]')?.addEventListener('click', () => {
@@ -1748,7 +1704,6 @@ function bindOverlay(overlay) {
     btn.addEventListener('click', () => onProviderUnlinkClick(btn));
   });
 
-  overlay.querySelector('[data-settings-form="password"]')?.addEventListener('submit', onPasswordSubmit);
 
   overlay.querySelector('[data-settings-sessions]')?.addEventListener('click', onSessionRevoke);
 
@@ -1778,10 +1733,6 @@ function bindOverlay(overlay) {
 
   overlay.querySelector('[data-settings-board-height]')?.addEventListener('change', () => {
     onBoardSizeChange(overlay);
-  });
-
-  overlay.querySelectorAll('[data-settings-notify]').forEach((input) => {
-    input.addEventListener('change', onNotifyToggle);
   });
 }
 
@@ -1832,15 +1783,9 @@ async function closeAccountSettings() {
 
 function getSettingsGearButtonHtml() {
   return `
-    <button
-      type="button"
-      class="auth-menu__settings"
-      role="menuitem"
-      data-auth-settings
-      aria-label="Account settings"
-      title="Account settings"
-    >
-      ${gearIcon()}
+    <button type="button" class="auth-menu__settings" role="menuitem" data-auth-settings>
+      <span class="auth-menu__settings-icon" aria-hidden="true">${gearIcon()}</span>
+      <span>Settings</span>
     </button>`;
 }
 
@@ -2817,19 +2762,13 @@ function setDocumentAuthState(user) {
 function renderGuestAuth(authRoot) {
   authRoot.dataset.authState = 'guest';
   authRoot.innerHTML = `
-    <button type="button" class="auth-btn auth-btn--ghost" data-auth-open="login">Login</button>
+    <button type="button" class="auth-btn auth-btn--ghost" data-auth-open="login">Log in</button>
     <button type="button" class="auth-btn auth-btn--solid" data-auth-open="signup">Sign up</button>
   `;
 
   authRoot.querySelectorAll('[data-auth-open]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const container = document.querySelector('.header_container');
-      container?.classList.remove('menu-open');
-      const toggle = container?.querySelector('.menu_toggle');
-      if (toggle) {
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.setAttribute('aria-label', 'Open menu');
-      }
+      closeMobileNav();
       openAuth(btn.getAttribute('data-auth-open'));
     });
   });
@@ -2939,8 +2878,8 @@ function buildUserMenuHtml(name, email, initials, avatarUrl) {
             <p class="auth-menu__name">${name}</p>
             ${email ? `<p class="auth-menu__email">${email}</p>` : ''}
           </div>
-          ${getSettingsGearButtonHtml()}
         </div>
+        ${getSettingsGearButtonHtml()}
         <button type="button" class="auth-menu__logout" role="menuitem" data-auth-logout>
           <span class="auth-menu__logout-icon" aria-hidden="true">${logoutIcon()}</span>
           <span>Log out</span>
@@ -3000,20 +2939,6 @@ function bindUserMenu(authRoot, user) {
   });
 }
 
-function restoreLocalProfileDraft(authRoot, user) {
-  try {
-    const raw = localStorage.getItem('numberlink.settings.draft');
-    if (!raw) return;
-    const draft = JSON.parse(raw);
-    if (draft?.userId && user?.id && draft.userId !== user.id) return;
-    applyLocalProfileToHeader(authRoot, {
-      username: draft.username || user.username,
-      email: draft.email ?? user.email,
-      avatarUrl: user.avatarUrl || draft.avatarUrl || null,
-    });
-  } catch (_) {}
-}
-
 function renderUserAuth(authRoot, user) {
   const name = escapeHtml(user.username || 'Player');
   const emailRaw = user.email ? String(user.email).trim() : '';
@@ -3023,7 +2948,6 @@ function renderUserAuth(authRoot, user) {
   authRoot.dataset.authState = 'user';
   authRoot.innerHTML = buildUserMenuHtml(name, email, initials, user.avatarUrl);
   bindUserMenu(authRoot, user);
-  restoreLocalProfileDraft(authRoot, user);
 }
 
 async function refreshAuthHeader(authRoot) {
@@ -3181,6 +3105,16 @@ function bindAuthOverlay(auth, overlay) {
     btn.addEventListener('click', closeAuth);
   });
 
+  overlay.addEventListener('click', (e) => {
+    if (e.target !== overlay) return;
+    const mode = overlay.getAttribute('data-auth-overlay');
+    if (mode === 'email-password' || mode === 'email-code' || mode === 'email-result') {
+      closeEmailChangeOverlays();
+    } else {
+      closeAuth();
+    }
+  });
+
   overlay.querySelectorAll('[data-auth-switch]').forEach((btn) => {
     btn.addEventListener('click', () => openAuth(btn.getAttribute('data-auth-switch')));
   });
@@ -3275,6 +3209,9 @@ function handleOAuthReturn(auth) {
 }
 
 function initAuthUi() {
+  try {
+    localStorage.removeItem('numberlink.settings.draft');
+  } catch (_) {}
   const container = document.querySelector('.header_container');
   if (!container || container.querySelector('.header_auth')) return;
 
@@ -3364,17 +3301,14 @@ function lockIcon() {
 function guestGateCopy() {
   return {
   leaderboard: {
-    eyebrow: 'Save your scores',
     title: 'See rankings with an account',
     text: 'Create an account or log in to open the leaderboard and keep your puzzle results after each win.',
   },
   reviews: {
-    eyebrow: 'Player feedback',
     title: 'Join the conversation',
     text: 'Create an account or log in to read reviews, rate NumberLink, and share your own experience.',
   },
   default: {
-    eyebrow: 'Account needed',
     title: 'Continue with an account',
     text: 'Create an account or log in to use this part of NumberLink.',
   },
@@ -3390,10 +3324,8 @@ function resolveGatePage() {
 
 function applyGateCopy(root) {
   const copy = guestGateCopy()[resolveGatePage()] || guestGateCopy().default;
-  const eyebrow = root.querySelector('.guest-gate__eyebrow');
   const title = root.querySelector('#guest-gate-title');
   const text = root.querySelector('#guest-gate-text');
-  if (eyebrow) eyebrow.textContent = copy.eyebrow;
   if (title) title.textContent = copy.title;
   if (text) text.textContent = copy.text;
 }
@@ -3413,23 +3345,23 @@ function ensureGate() {
   root.innerHTML = `
     <div class="guest-gate__dialog" tabindex="-1">
       <div class="guest-gate__icon">${lockIcon()}</div>
-      <p class="guest-gate__eyebrow"></p>
       <h2 class="guest-gate__title" id="guest-gate-title"></h2>
       <p class="guest-gate__text" id="guest-gate-text"></p>
       <div class="guest-gate__actions">
-        <button type="button" class="guest-gate__btn guest-gate__btn--primary" data-gate-auth="login">
-          Log in
-        </button>
-        <button type="button" class="guest-gate__btn guest-gate__btn--ghost" data-gate-auth="signup">
+        <button type="button" class="guest-gate__btn guest-gate__btn--primary" data-gate-auth="signup">
           Sign up
         </button>
+        <button type="button" class="guest-gate__btn guest-gate__btn--ghost" data-gate-auth="login">
+          Log in
+        </button>
       </div>
-      <a class="guest-gate__home" href="/">Back to NumberLink</a>
+      <a class="guest-gate__home" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3"/><path d="M7 4 3 8l4 4"/></svg>Back to NumberLink</a>
     </div>
   `;
 
   root.querySelectorAll('[data-gate-auth]').forEach((btn) => {
     btn.addEventListener('click', () => {
+      btn.blur();
       const mode = btn.getAttribute('data-gate-auth') || 'login';
       window.NumberLinkAuth?.open(mode);
     });
@@ -3521,14 +3453,66 @@ function burgerIcon() {
 }
 
 function mobileCloseIcon() {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+}
+
+function syncMobileHeaderBarHeight(container) {
+  if (!container) return;
+  const header = document.querySelector('header');
+  const top = header ? Math.round(header.getBoundingClientRect().bottom) : container.offsetHeight;
+  document.documentElement.style.setProperty('--mobile-header-bar-h', `${top}px`);
+}
+
+function syncMobileNavPlacement(container, drawer, navLinks) {
+  const github = container.querySelector('.header_github');
+  if (window.matchMedia('(max-width: 576px)').matches) {
+    navLinks.forEach((link) => drawer.appendChild(link));
+  } else {
+    navLinks.forEach((link) => container.insertBefore(link, github));
+  }
+}
+
+function closeMobileNav() {
+  const container = document.querySelector('.header_container');
+  const drawer = document.querySelector('.mobile-nav-drawer');
+  const scrim = document.querySelector('.mobile-nav-scrim');
+  if (!container?.classList.contains('menu-open')) return;
+
+  container.classList.remove('menu-open');
+  if (drawer) drawer.hidden = true;
+  if (scrim) scrim.hidden = true;
+  const toggle = container.querySelector('.menu_toggle');
+  if (toggle) {
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open menu');
+    toggle.innerHTML = burgerIcon();
+  }
 }
 
 function initMobileNav() {
+  const header = document.querySelector('header');
   const container = document.querySelector('.header_container');
-  if (!container || container.querySelector('.menu_toggle')) return;
+  if (!header || !container || container.querySelector('.menu_toggle')) return;
+
+  const navLinks = [...container.querySelectorAll('a:not(.header_github):not(.numberlink_nav)')];
+  const drawer = document.createElement('div');
+  drawer.className = 'mobile-nav-drawer';
+  drawer.hidden = true;
+  document.body.appendChild(drawer);
+
+  const scrim = document.createElement('div');
+  scrim.className = 'mobile-nav-scrim';
+  scrim.hidden = true;
+  document.body.appendChild(scrim);
+  scrim.addEventListener('click', closeMobileNav);
+
+  const mq = window.matchMedia('(max-width: 576px)');
+  syncMobileNavPlacement(container, drawer, navLinks);
+  mq.addEventListener('change', () => {
+    closeMobileNav();
+    syncMobileNavPlacement(container, drawer, navLinks);
+    syncMobileHeaderBarHeight(container);
+  });
 
   const btn = document.createElement('button');
   btn.className = 'menu_toggle';
@@ -3538,12 +3522,25 @@ function initMobileNav() {
   btn.innerHTML = burgerIcon();
 
   container.prepend(btn);
+  syncMobileHeaderBarHeight(container);
+  window.addEventListener('resize', () => syncMobileHeaderBarHeight(container));
 
   btn.addEventListener('click', () => {
+    syncMobileHeaderBarHeight(container);
     const open = container.classList.toggle('menu-open');
+    drawer.hidden = !open;
+    scrim.hidden = !open;
     btn.setAttribute('aria-expanded', String(open));
     btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     btn.innerHTML = open ? mobileCloseIcon() : burgerIcon();
+    requestAnimationFrame(() => {
+      btn.blur();
+      container.querySelectorAll('.auth-btn').forEach((el) => el.blur());
+    });
+  });
+
+  drawer.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMobileNav);
   });
 }
 
@@ -3565,27 +3562,34 @@ function main() {
 
 main();
 
+function setLeaderboardPeriod(value, label) {
+    const periodButton = document.getElementById('leaderboard-period');
+    if (!periodButton) return;
+
+    periodButton.dataset.period = value;
+    periodButton.textContent = label;
+
+    document.querySelectorAll('.leaderboard_period_menu .dropdown-item').forEach((item) => {
+        item.classList.toggle('active', item.dataset.value === value);
+    });
+}
+
 function leaderBoarTimelineButtons() {
-    const buttons = document.querySelectorAll('.leaderboard_modes div');
+    const periodButton = document.getElementById('leaderboard-period');
+    const items = document.querySelectorAll('.leaderboard_period_menu .dropdown-item');
+    if (!periodButton) return;
 
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-
-            buttons.forEach(btn => {
-                btn.classList.remove('leaderboard_mode');
-                btn.classList.add('leaderboard_mode-1');
-            });
-
-            button.classList.remove('leaderboard_mode-1');
-            button.classList.add('leaderboard_mode');
-
+    items.forEach((item) => {
+        item.addEventListener('click', (event) => {
+            event.preventDefault();
+            setLeaderboardPeriod(item.dataset.value, item.textContent.trim());
             pagePagination();
         });
     });
 }
 
 function sortButtonsConfiguration() {
-    const dropDownElements = document.querySelectorAll('.sort_menu .dropdown-item');
+    const dropDownElements = document.querySelectorAll('.sort_dropdown .dropdown-item');
     const mapSortButton = document.getElementById('map-sort-button');
 
     dropDownElements.forEach(item => {
@@ -3621,15 +3625,14 @@ sortButtons.forEach(button => {
 }
 
 function resolveLeaderboardFilters() {
-  const periodMap = { 'All Time': 'all-time', Monthly: 'month', Weekly: 'week' };
   const sortMap = { Time: 'time', 'Average Time': 'avgElapsedSeconds', 'Average Score': 'avgScore' };
 
-  const periodLabel = document.querySelector('.leaderboard_mode')?.innerHTML;
+  const period = document.getElementById('leaderboard-period')?.dataset.period || '';
   const sortLabel = document.querySelector('.active.sort_btn:not(.dropdown-toggle)')?.innerHTML;
   const mapSize = document.getElementById('map-sort-button')?.dataset.size || '';
 
   return {
-    period: periodMap[periodLabel] || '',
+    period,
     criterion: sortMap[sortLabel] || '',
     mapSize,
   };
@@ -3668,7 +3671,8 @@ function showLeaderboardEmpty() {
     document.querySelectorAll('.sort_btn:not(.dropdown-toggle).active').forEach((btn) => {
       btn.classList.remove('active');
     });
-    document.querySelector('.leaderboard_modes .all-time')?.click();
+    setLeaderboardPeriod('all-time', 'All Time');
+    pagePagination();
   });
 }
 
