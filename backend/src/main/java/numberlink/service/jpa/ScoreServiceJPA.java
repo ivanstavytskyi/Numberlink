@@ -39,7 +39,7 @@ public class ScoreServiceJPA implements ScoreService {
         StringBuilder jpql = new StringBuilder("""
                 SELECT new numberlink.dto.score.response.ScoreResponseDto(
                     u.username,
-                    u.avatarUrl,
+                    MAX(u.avatarUrl),
                     MIN(s.elapsedSeconds),
                     MAX(s.fieldWidth),
                     MAX(s.fieldHeight),
@@ -69,14 +69,14 @@ public class ScoreServiceJPA implements ScoreService {
             jpql.append(" AND s.fieldWidth = :width AND s.fieldHeight = :height");
         }
 
-        jpql.append(" GROUP BY u.username, u.avatarUrl");
+        jpql.append(" GROUP BY u.id, u.username");
 
         String sort = criterion == null ? "score" : criterion;
         switch (sort) {
-            case "time" -> jpql.append(" ORDER BY MIN(s.elapsedSeconds) ASC");
-            case "avgElapsedSeconds", "avgTime" -> jpql.append(" ORDER BY ROUND(AVG(s.elapsedSeconds), 1) ASC");
-            case "avgScore" -> jpql.append(" ORDER BY ROUND(AVG(s.scoreResult), 1) DESC");
-            default -> jpql.append(" ORDER BY MAX(s.scoreResult) DESC");
+            case "time" -> jpql.append(" ORDER BY MIN(s.elapsedSeconds) ASC, u.username ASC");
+            case "avgElapsedSeconds", "avgTime" -> jpql.append(" ORDER BY ROUND(AVG(s.elapsedSeconds), 1) ASC, u.username ASC");
+            case "avgScore" -> jpql.append(" ORDER BY ROUND(AVG(s.scoreResult), 1) DESC, u.username ASC");
+            default -> jpql.append(" ORDER BY MAX(s.scoreResult) DESC, MIN(s.elapsedSeconds) ASC, u.username ASC");
         }
 
         TypedQuery<ScoreResponseDto> query =
