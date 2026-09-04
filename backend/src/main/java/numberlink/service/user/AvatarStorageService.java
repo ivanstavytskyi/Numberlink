@@ -44,7 +44,7 @@ public class AvatarStorageService {
             AuthService authService,
             UserRepository userRepository,
             @Value("${app.uploads.dir:uploads}") String uploadsDir,
-            @Value("${app.avatar.max-bytes:1048576}") long maxBytes
+            @Value("${app.avatar.max-bytes:7340032}") long maxBytes
     ) {
         this.authService = authService;
         this.userRepository = userRepository;
