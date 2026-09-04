@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>NumberLink — Leaderboard</title>
+    <link rel="icon" type="image/svg+xml" href="/logo_white_theme.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/logo_dark_theme.svg" media="(prefers-color-scheme: dark)" />
 
     <style>body{opacity:0;transition:opacity .22s ease}</style>
 </head>
@@ -14,7 +16,7 @@
         <div class="header_container container-fluid d-flex flex-wrap justify-content-start align-items-center ">
 
             <a href="/" class="numberlink_nav text-decoration-none text-reset" aria-label="Home">
-                <img class="header_logo" src="/logo.svg?v=3" width="52" height="52" alt="">
+                <img class="header_logo" src="/logo.svg" width="32" height="32" alt="">
             </a>
 
             <a href="/" class="text-decoration-none text-reset">
@@ -53,35 +55,48 @@
     <main>
         <div class="mt-4 container-fluid">
             <div class="row justify-content-center">
-                <div
-                    class="leaderboard_head_block col-11 col-sm-9 col-md-8 col-lg-7 col-xl-6 d-flex justify-content-between align-items-start p-4">
-                    <div class="leaderboard_heading_left_part d-flex flex-column">
-                        <div class="leaderboard_text text-light mb-1">
-                            Leaderboard<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-medal mr-2 h-4 w-4"
-                                aria-hidden="true" style="
-                                    margin-left: 12px;
-                                    margin-bottom: 5px;
-                                ">
-                                <path
-                                    d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15">
-                                </path>
-                                <path d="M11 12 5.12 2.2"></path>
-                                <path d="m13 12 5.88-9.8"></path>
-                                <path d="M8 7h8"></path>
-                                <circle cx="12" cy="17" r="5"></circle>
-                                <path d="M12 18v-2h-.5"></path>
-                            </svg>
+                <div class="leaderboard_head_wrap col-11 col-sm-9 col-md-8 col-lg-7 col-xl-6">
+                    <div class="leaderboard_head_block">
+                        <div class="leaderboard_heading_left_part">
+                            <div class="leaderboard_text text-light mb-1">
+                                Leaderboard<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-medal mr-2 h-4 w-4"
+                                    aria-hidden="true" style="
+                                        margin-left: 12px;
+                                        margin-bottom: 5px;
+                                    ">
+                                    <path
+                                        d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15">
+                                    </path>
+                                    <path d="M11 12 5.12 2.2"></path>
+                                    <path d="m13 12 5.88-9.8"></path>
+                                    <path d="M8 7h8"></path>
+                                    <circle cx="12" cy="17" r="5"></circle>
+                                    <path d="M12 18v-2h-.5"></path>
+                                </svg>
+                            </div>
+                            <div class="leaderboard_head_description">
+                                See who's leading the pack in our global quiz rankings.
+                            </div>
                         </div>
-                        <div class="leaderboard_head_description">
-                            See who's leading the pack in our global quiz rankings.
+                        <div class="leaderboard_period dropdown">
+                            <span class="visually-hidden" id="leaderboard-period-label">Rankings period</span>
+                            <button type="button"
+                                class="btn dropdown-toggle leaderboard_period_select"
+                                id="leaderboard-period"
+                                data-bs-toggle="dropdown"
+                                data-period="all-time"
+                                aria-labelledby="leaderboard-period-label"
+                                aria-expanded="false">
+                                All Time
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end leaderboard_period_menu" aria-labelledby="leaderboard-period">
+                                <li><a class="dropdown-item" href="#" data-value="week">Weekly</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="month">Monthly</a></li>
+                                <li><a class="dropdown-item active" href="#" data-value="all-time">All Time</a></li>
+                            </ul>
                         </div>
-                    </div>
-                    <div class="leaderboard_modes d-flex gap-2">
-                        <div class="leaderboard_mode-1 week">Weekly</div>
-                        <div class="leaderboard_mode-1 month">Monthly</div>
-                        <div class="leaderboard_mode all-time">All Time</div>
                     </div>
                 </div>
             </div>
@@ -89,7 +104,7 @@
         <section id="main">
             <div class="mt-4 container-fluid">
                 <div class="row justify-content-center flex-wrap leaderboard">
-                    <div class="field_container col-12 col-sm-11 col-md-10 col-lg-9 col-xl-8 p-0 mb-5">
+                    <div class="field_container col-12 col-sm-11 col-md-10 col-lg-9 col-xl-8 p-0 mb-4">
 
                         <div class="leaderboard_panel">
                             <div class="sort_panel d-flex justify-content-left flex-wrap gap-4">
